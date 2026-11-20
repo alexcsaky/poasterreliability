@@ -230,3 +230,19 @@ these need a decision (or advice) before the pilot runs and before anything is p
 The full-cohort estimate uses observed pilot rates (posts per account per day, quoted share, release-related
 share) when pilot data exist, and states its assumptions otherwise. X cost is shown as a range: posts only, and
 posts plus billed expansions (the unconfirmed case).
+
+## D-019 (2026-11-20) Ledger merge edits and tier harmonisation
+
+Applied by `scripts/merge_ledger.py` from `ledger/merge_fixes.yaml`, each with its reason there:
+- Dropped 6 rows: GPT-5.1-Codex-Max (usable before the period), and five rows with no official date for any
+  availability route (Qwen-Drive-1.0, WebWorld, GLM-5.3-FlashX-Legal, Grok Imagine Image Pro, Grok Imagine Video 1.5
+  Lite). Dropped 2 undated signals.
+- Tier harmonised so that a lab's smaller or specialised siblings are `other`, as for Gemini Flash vs Pro: DeepSeek
+  V4/V4.1 Flash rows and Kimi K2.7 Code set to `other`; Anthropic Mythos rows set to `flagship` (top line; still
+  `status=preview`).
+- Official domains added after the research showed the labs use them: chatgpt.com, aistudio.google.com (Gemini API
+  docs now redirect there), huggingface.co/Wan-AI and github.com/Wan-Video (Alibaba's Wan team), platform.kimi.ai and
+  kimi.ai (Moonshot's platform moved), research.meta.ai, dev.meta.ai and huggingface.co/meta-models (Meta), and
+  x.com/SpaceXSI (xAI's renamed account). Staff accounts in `config/lab_staff.yaml` count as official for signals;
+  added @finkd (Mark Zuckerberg).
+- Result: 259 releases, 98 signals, 0 validation problems. Caveats in `ledger/NOTES.md`.

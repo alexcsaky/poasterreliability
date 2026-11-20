@@ -1,0 +1,53 @@
+release_id,lab,model
+alibaba-qwen-audio-3-0-tts,alibaba,Qwen-Audio-3.0-TTS (Flash / Plus)
+alibaba-qwen-image-3-0,alibaba,Qwen-Image-3.0 (Pro / Standard)
+alibaba-qwen3-5-ocr,alibaba,Qwen3.5-OCR
+alibaba-qwen3-6-max-preview,alibaba,Qwen3.6-Max-Preview
+alibaba-qwen3-7-flash,alibaba,Qwen3.7-Flash
+alibaba-qwen3-8-2-4t-a95b,alibaba,Qwen3.8-2.4T-A95B
+alibaba-qwen3-8-flash,alibaba,Qwen3.8-Flash (open weights: Qwen3.8-Flash-Next)
+alibaba-qwen3-8-max,alibaba,Qwen3.8-Max
+alibaba-qwen3-omni-flash-2025-12-01,alibaba,Qwen3-Omni-Flash-2025-12-01
+anthropic-claude-fable-5-2,anthropic,Claude Fable 5.2
+anthropic-claude-mythos-5-1,anthropic,Claude Mythos 5.1
+anthropic-claude-opus-4-6,anthropic,Claude Opus 4.6
+deepseek-deepseek-v4-flash-preview,deepseek,DeepSeek-V4-Flash (Preview)
+deepseek-deepseek-v4-pro-preview,deepseek,DeepSeek-V4-Pro (Preview)
+google_deepmind-antigravity-agent,google_deepmind,Antigravity Agent
+google_deepmind-gemini-3-1-flash-lite,google_deepmind,Gemini 3.1 Flash-Lite
+google_deepmind-gemini-3-5-flash,google_deepmind,Gemini 3.5 Flash
+google_deepmind-gemini-3-5-flash-lite,google_deepmind,Gemini 3.5 Flash-Lite
+google_deepmind-gemini-3-5-transcribe,google_deepmind,Gemini 3.5 Transcribe
+google_deepmind-gemini-3-6-flash,google_deepmind,Gemini 3.6 Flash
+google_deepmind-gemini-3-8-flash,google_deepmind,Gemini 3.8 Flash
+google_deepmind-gemini-3-deep-think,google_deepmind,Gemini 3 Deep Think
+google_deepmind-gemini-4-carbon,google_deepmind,Gemini 4 Carbon
+google_deepmind-gemini-4-neon,google_deepmind,Gemini 4 Neon
+google_deepmind-gemini-decision-1,google_deepmind,Gemini Decision 1
+google_deepmind-gemini-deep-research-agent,google_deepmind,Gemini Deep Research agent
+google_deepmind-gemma-4,google_deepmind,Gemma 4
+google_deepmind-magenta-realtime-2,google_deepmind,Magenta RealTime 2
+meta-muse-spark-1-1,meta,Muse Spark 1.1
+meta-muse-wonder-full,meta,Muse Wonder Full
+mistral-devstral-small-2,mistral,Devstral Small 2
+mistral-leanstral,mistral,Leanstral
+moonshot-kimi-k2-6,moonshot,Kimi K2.6
+openai-gpt-5-3-codex,openai,GPT-5.3-Codex
+openai-gpt-5-4-pro,openai,GPT-5.4 Pro
+openai-gpt-5-5,openai,GPT-5.5
+openai-gpt-5-5-pro,openai,GPT-5.5 Pro
+openai-gpt-6-luna,openai,GPT-6 Luna
+openai-gpt-6-rosalind,openai,GPT-Rosalind-6
+openai-gpt-audio-1-5,openai,GPT-Audio-1.5
+openai-gpt-rosalind,openai,GPT-Rosalind
+openai-gpt-transcribe,openai,GPT-Transcribe
+xai-grok-4-3,xai,Grok 4.3
+xai-grok-4-8,xai,Grok 4.8
+xai-grok-build-0-1,xai,Grok Build 0.1
+xai-grok-imagine-1-0,xai,Grok Imagine 1.0 (video)
+xai-grok-imagine-video-1-5,xai,Grok Imagine Video 1.5
+xai-grok-text-to-speech,xai,xAI Text to Speech API
+xai-grok-voice-2-0,xai,Grok Voice 2.0
+xai-grok-voice-transcribe-2-0,xai,Grok Voice Transcribe 2.0
+zhipu-glm-5,zhipu,GLM-5
+zhipu-realvideo,zhipu,RealVideo

@@ -21,12 +21,12 @@ labs:
     flagship_lines: ["Gemini Pro", "Gemini Ultra", "Gemini Deep Think"]
   - id: xai
     name: xAI
-    official_domains: [x.ai, docs.x.ai, grok.com, x.com/xai, x.com/grok, x.com/elonmusk, huggingface.co/xai-org, github.com/xai-org]
-    x_accounts: [xai, grok, elonmusk]
+    official_domains: [x.ai, docs.x.ai, grok.com, x.com/SpaceXSI, x.com/xai, x.com/grok, x.com/elonmusk, huggingface.co/xai-org, github.com/xai-org]
+    x_accounts: [SpaceXSI, grok, elonmusk]   # @xai was renamed @SpaceXSI (same account id); the current @xai is a different account
     flagship_lines: ["Grok (numbered major/minor versions, top tier)"]
   - id: meta
     name: Meta
-    official_domains: [ai.meta.com, about.fb.com, llama.com, www.llama.com, meta.ai, github.com/meta-llama, huggingface.co/meta-llama, huggingface.co/facebook, x.com/AIatMeta, x.com/Meta]
+    official_domains: [ai.meta.com, research.meta.ai, dev.meta.ai, huggingface.co/meta-models, about.fb.com, llama.com, www.llama.com, meta.ai, github.com/meta-llama, huggingface.co/meta-llama, huggingface.co/facebook, x.com/AIatMeta, x.com/Meta]
     x_accounts: [AIatMeta, Meta, alexandr_wang]
     flagship_lines: ["Llama (largest release)", "Meta Superintelligence Labs frontier models"]
   - id: mistral
