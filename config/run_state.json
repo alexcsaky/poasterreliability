@@ -1,0 +1,11 @@
+{
+  "ledger_reresearch": {
+    "field_conflict": 0.025974025974025976,
+    "field_disagreement": 0.1396103896103896,
+    "fields": 308,
+    "row_conflict": 0.15384615384615385,
+    "row_disagreement": 0.5192307692307693,
+    "rows": 52,
+    "share": 0.20077220077220076
+  }
+}

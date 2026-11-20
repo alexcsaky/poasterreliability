@@ -104,8 +104,10 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
     if rr:
         L.append("")
         L.append(f"Independent re-research of a random {rr['share']:.0%} of rows ({rr['rows']} rows, {rr['fields']} "
-                 f"fields compared): field-level disagreement rate **{rr['field_disagreement']:.1%}**; rows with at least "
-                 f"one disagreement {rr['row_disagreement']:.1%}. Details: `ledger/reresearch/report.md`.")
+                 f"fields compared): field-level disagreement rate **{rr['field_disagreement']:.1%}**, of which real "
+                 f"conflicts (not a missing value or a one-day date difference) {rr.get('field_conflict', 0):.1%}; rows with "
+                 f"any disagreement {rr['row_disagreement']:.1%}, with a real conflict {rr.get('row_conflict', 0):.1%}. "
+                 "Details: `ledger/reresearch/report.md`.")
     L.append("")
 
     # yield

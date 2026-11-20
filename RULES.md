@@ -78,7 +78,8 @@ model name matches (section 6) that falls **after the post**.
 | the post names no model or model family | `uncheckable` (reason: no model named) |
 
 A claim about a model family ("a new Gemini model", "new Claude") matches any ledger row in that family
-from the named lab.
+from the named lab; releases in the family from before the post are ignored (they cannot make a family claim
+"already out").
 
 ## 5. Attribute claims
 

@@ -24,6 +24,22 @@ for rid, kv in (fixes.get("set_fields") or {}).items():
     for r in rels:
         if r["release_id"] == rid:
             r.update(kv)
+# Fill blanks from the independent second pass (after the disagreement rate has been measured; D-020).
+second = {r["release_id"]: r for r in read_csv(config.LEDGER / "reresearch" / "second_pass.csv")}
+for r in rels:
+    s2 = second.get(r["release_id"])
+    if not s2:
+        continue
+    fill = ["price", "context_window", "benchmarks"]
+    if (s2.get("status") or "").strip() == (r.get("status") or "").strip():
+        fill += ["consumer_available_at", "api_available_at", "open_weights_at"]
+    filled = [f for f in fill if not (r.get(f) or "").strip() and (s2.get(f) or "").strip()]
+    for f in filled:
+        r[f] = s2[f]
+    if filled:
+        extra = [u for u in (s2.get("source_urls") or "").split(";") if u.strip() and u.strip() not in r["source_urls"]]
+        r["source_urls"] = ";".join([r["source_urls"]] + [u.strip() for u in extra])
+        r["notes"] = (r.get("notes") or "") + f" [{', '.join(filled)} filled from independent re-research (D-020)]"
 clean = lambda r, cols: {c: " ".join((r.get(c) or "").split()) for c in cols}
 rels = sorted((clean(r, RELEASE_COLUMNS) for r in rels), key=lambda r: (r["lab"], r["announced_at"] or r["api_available_at"] or r["consumer_available_at"], r["release_id"]))
 sigs = sorted((clean(s, SIGNAL_COLUMNS) for s in sigs), key=lambda s: (s["lab"], s["posted_at"], s["signal_id"]))

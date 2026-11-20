@@ -246,3 +246,19 @@ Applied by `scripts/merge_ledger.py` from `ledger/merge_fixes.yaml`, each with i
   x.com/SpaceXSI (xAI's renamed account). Staff accounts in `config/lab_staff.yaml` count as official for signals;
   added @finkd (Mark Zuckerberg).
 - Result: 259 releases, 98 signals, 0 validation problems. Caveats in `ledger/NOTES.md`.
+
+## D-020 (2026-11-20) Re-research result, and filling gaps from the second pass
+
+- 52 of 259 rows (20%, seed 20261120) were re-researched by five agents who saw only lab and model name and were
+  told not to open the ledger. 308 fields were comparable. Any disagreement: 14.0% of fields (52% of rows).
+  Real conflicts, i.e. not a value only one researcher found and not dates one day apart: 2.6% of fields
+  (8 fields; 15% of rows). Full list: `ledger/reresearch/report.md`.
+- The real conflicts are definitional rather than errors: which date counts as the announcement (release-notes
+  listing vs blog post; Qwen-Audio-3.0-TTS, Grok Imagine 1.0), native vs extended context window (Qwen3.8-2.4T),
+  which plan counts as consumer availability (Grok Build 0.1), and price bases (per image vs per token, CNY vs USD,
+  $0.15 vs $0.16). No ledger value was changed because of them.
+- Comparison rules: dates at day level, price on input/output per-Mtok figures (1% tolerance) or the first dollar
+  amount, context window within 5%, benchmarks in common within 0.15 points; text-only prices not compared.
+- After the rate was measured, blank fields in the first pass were filled from the second pass where it cited an
+  official source: price, context window and benchmarks always, availability dates only where both passes agreed
+  on status. 16 rows gained values; each says so in its notes and carries the extra source URLs.
