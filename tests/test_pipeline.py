@@ -131,6 +131,15 @@ def test_daily_and_deletion(conn):
     assert ("201",) in [tuple(g) for g in gone]
 
 
+def test_signals_x(conn):
+    from xrf import signals_x
+    from xrf.ledger import load_signals
+    n = signals_x.collect(conn, log=lambda *a: None)
+    assert n == 1                                   # the @OpenAI teaser; @eve is not a listed account
+    sig = [s for s in load_signals() if s["signal_id"].startswith("openai-gpt-9-x")]
+    assert all(s["url"].startswith("https://x.com/") for s in sig)
+
+
 def test_cap_enforced_end_to_end(conn):
     costs.record(conn, "x_reads", "x", "test", 0, "x", costs.caps()["x_reads"], 0)
     with pytest.raises(costs.CapExceeded):

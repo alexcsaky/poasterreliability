@@ -118,11 +118,17 @@ def _pool_add(conn, user_id, username, source) -> None:
 # ---- 2b. Grok discovery (optional) --------------------------------------------------------------
 
 def grok_discover(conn, as_of: datetime, log=print) -> list[str]:
-    from . import xai
-    if not config.env_key("XAI_API_KEY"):
+    import os
+    from . import state, xai
+    offline = os.environ.get("XRF_OFFLINE") == "1"
+    if offline and not state.get("grok_used"):
+        return []
+    if not offline and not config.env_key("XAI_API_KEY"):
         log("  XAI_API_KEY not set: skipping Grok discovery")
         return []
     names = xai.discover_accounts(conn, as_of)
+    if not offline:
+        state.set("grok_used", True)
     for u in names:
         _pool_add(conn, None, u, "grok")
     conn.commit()

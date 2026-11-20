@@ -1,6 +1,6 @@
 # Pilot report: X release-forecaster tracker
 
-Generated 2026-11-20 04:38 UTC by `python -m xrf rebuild`; verdicts as of 2026-11-20 04:38 UTC. Every figure below is regenerated from stored raw API responses, the ledger and `RULES.md` (tag `rules-v1`). Nothing here is published; the repo is private.
+Generated 2026-11-20 05:03 UTC (regenerate with `python -m xrf rebuild`); verdicts as of 2026-11-20 05:03 UTC. Every figure below is regenerated from stored raw API responses, the ledger and `RULES.md` (tag `rules-v1`). Nothing here is published; the repo is private.
 
 > **Backtest caveat.** A backtest only sees posts that still existed when collected. Posts deleted before collection (plausibly the wrong ones) are missing, so **every accuracy figure in this report is an upper bound**.
 
@@ -8,17 +8,22 @@ Generated 2026-11-20 04:38 UTC by `python -m xrf rebuild`; verdicts as of 2026-1
 
 ## Ground truth
 
-`ledger/releases.csv`: 174 release events (1 Dec 2025 to 20 Nov 2026); `ledger/signals.csv`: 54 official pre-release signals.
+`ledger/releases.csv`: 259 release events (1 Dec 2025 to 20 Nov 2026); `ledger/signals.csv`: 98 official pre-release signals.
 
 | lab | releases | flagship |
 |---|---|---|
-| anthropic | 16 | 8 |
-| deepseek | 11 | 9 |
+| alibaba | 53 | 7 |
+| anthropic | 16 | 12 |
+| deepseek | 11 | 5 |
 | google_deepmind | 54 | 6 |
+| meta | 14 | 7 |
 | mistral | 19 | 3 |
-| moonshot | 5 | 5 |
-| openai | 50 | 9 |
-| zhipu | 19 | 5 |
+| moonshot | 5 | 4 |
+| openai | 49 | 9 |
+| xai | 20 | 8 |
+| zhipu | 18 | 5 |
+
+Independent re-research of a random 20% of rows (52 rows, 308 fields compared): field-level disagreement rate **14.0%**, of which real conflicts (not a missing value or a one-day date difference) 2.6%; rows with any disagreement 51.9%, with a real conflict 15.4%. Details: `ledger/reresearch/report.md`.
 
 ## Yield
 

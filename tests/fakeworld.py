@@ -37,6 +37,7 @@ POSTS = [
     P("302", "3", "2026-11-12T08:00:00.000Z", "Gemini 10 maybe next month?", imps=9000),
     P("303", "3", "2026-11-13T08:00:00.000Z", "GPT-10 today", imps=9000),
     P("401", "4", "2026-10-05T10:00:00.000Z", "GPT-9 soon", imps=100),
+    P("601", "6", "2026-10-05T12:00:00.000Z", "GPT-9 next week", imps=500000),
     P("501", "5", "2026-10-06T10:00:00.000Z", "GPT-9 next week", imps=100000),
 ]
 BY_ID = {p["id"]: p for p in POSTS}
@@ -70,9 +71,13 @@ def x_send(path, params):
     if path in ("/tweets/search/all", "/tweets/search/recent"):
         q = params["query"]
         s, e = _t(params["start_time"]), _t(params["end_time"])
-        m = re.search(r"from:(\w+)", q)
-        uid = next((u for u, d in USERS.items() if m and d["username"].lower() == m.group(1).lower()), None)
-        posts = [p for p in POSTS if s <= _t(p["created_at"]) < e and (uid is None or p["author_id"] == uid)]
+        froms = [f.lower() for f in re.findall(r"from:(\w+)", q)]
+        m = bool(froms)
+        uids = {u for u, d in USERS.items() if d["username"].lower() in froms}
+        posts = [p for p in POSTS if s <= _t(p["created_at"]) < e and (not m or p["author_id"] in uids)]
+        if m and '"' in q:   # from: plus quoted names (signals-x)
+            names = re.findall(r'"([^"]+)"', q)
+            posts = [p for p in posts if any(n.lower() in p["text"].lower() for n in names)]
         if "-is:reply" in q:
             posts = [p for p in posts if not any(r["type"] == "replied_to" for r in p.get("referenced_tweets", []))]
         if not m:   # sweeps: posts naming a model

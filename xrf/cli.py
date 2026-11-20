@@ -40,6 +40,11 @@ def cmd_reresearch_compare(a):
     print(json.dumps(reresearch.compare(), indent=2))
 
 
+def cmd_signals_x(a):
+    from . import signals_x
+    print(f"{signals_x.collect(_conn())} official X signals written to ledger/signals_x.csv")
+
+
 def cmd_probe(a):
     from . import xapi
     print(xapi.probe(_conn()))
@@ -145,6 +150,8 @@ def cmd_pilot(a):
     print("keys present:", keys)
     if not keys["X_BEARER_TOKEN"] or not keys["ANTHROPIC_API_KEY"]:
         sys.exit("X_BEARER_TOKEN and ANTHROPIC_API_KEY are both required for the pilot run.")
+    if not (config.LEDGER / "signals_x.csv").exists():
+        cmd_signals_x(a)
     if not state.get("pilot_accounts"):
         cmd_cohort(a)
     cmd_collect(a)
@@ -167,6 +174,9 @@ def cmd_rebuild(a):
     from . import xparse
     n = xparse.reingest_all(conn)
     print(f"re-ingested {n} posts from raw")
+    if (config.LEDGER / "signals_x.csv").exists():
+        from . import signals_x
+        signals_x.collect(conn, log=lambda *x: None)
     if state.get("cohort_as_of"):
         from . import cohort
         out = cohort.build(conn, state.get_or_set_time("cohort_as_of"), log=lambda *x: None)
@@ -180,6 +190,8 @@ def cmd_rebuild(a):
             cmd_audit_sample(a)
             from . import audit
             audit.alt_run(conn)
+    from . import daily
+    daily.rederive_deletion_checks(conn)
     cmd_report(a)
 
 
@@ -203,6 +215,7 @@ def main(argv=None):
         ("ledger-validate", cmd_ledger_validate, "check ledger rows and official sources"),
         ("reresearch-sample", cmd_reresearch_sample, "Stage 1: draw the 20% re-research sample"),
         ("reresearch-compare", cmd_reresearch_compare, "Stage 1: disagreement rate vs the second pass"),
+        ("signals-x", cmd_signals_x, "Stage 1b: official pre-release posts on X (needs X key)"),
         ("probe", cmd_probe, "one cheap X call to confirm field names"),
         ("cohort", cmd_cohort, "Stage 2: build cohort and pilot subset"),
         ("collect", cmd_collect, "Stage 3: collect pilot posts"),

@@ -64,6 +64,36 @@ def daily(conn, day: date, usernames: list[str], commit: bool = True, log=print)
     return {"day": day.isoformat(), "posts": n_posts, **ex, "claims_logged": n, "sha256": sha, "committed": committed}
 
 
+def _record_lookup(conn, raw, d: int) -> int:
+    j = raw.json()
+    present = {t["id"] for t in j.get("data") or []}
+    errs = {e.get("resource_id") or e.get("value"): e for e in j.get("errors") or []}
+    asked = json.loads(conn.execute("SELECT params_json FROM raw_responses WHERE id=?", (raw.id,)).fetchone()[0])["ids"].split(",")
+    gone = 0
+    for pid in asked:
+        exists = pid in present
+        gone += not exists
+        detail = "" if exists else json.dumps(errs.get(pid, {"title": "missing"}))
+        conn.execute("INSERT OR REPLACE INTO deletion_checks VALUES (?,?,?,?,?,?)",
+                     (pid, d, raw.requested_at, int(exists), detail, raw.id))
+    return gone
+
+
+def rederive_deletion_checks(conn) -> int:
+    """Rebuild the deletion_checks table from stored lookup responses (used by `xrf rebuild`)."""
+    from . import rawstore
+    n = 0
+    for r in conn.execute("SELECT id,status,body_path,requested_at,params_json FROM raw_responses "
+                          "WHERE provider='x' AND endpoint='/tweets' AND status BETWEEN 200 AND 299").fetchall():
+        as_of = json.loads(r["params_json"]).get("_as_of", "")
+        if ":d" not in as_of:
+            continue
+        raw = rawstore.Raw(r["id"], r["status"], rawstore.load_body(r["body_path"]), r["requested_at"], True)
+        n += _record_lookup(conn, raw, int(as_of.rsplit(":d", 1)[1]))
+    conn.commit()
+    return n
+
+
 def deletion_check(conn, today: date, days=(7, 30), log=print) -> dict:
     out = {}
     for d in days:
@@ -74,16 +104,7 @@ def deletion_check(conn, today: date, days=(7, 30), log=print) -> dict:
         ids = [r[0] for r in rows]
         gone = 0
         for raw in xapi.posts_lookup(conn, ids, budget="x_reads", as_of=f"{today.isoformat()}:d{d}") if ids else []:
-            j = raw.json()
-            present = {t["id"] for t in j.get("data") or []}
-            errs = {e.get("resource_id") or e.get("value"): e for e in j.get("errors") or []}
-            asked = json.loads(conn.execute("SELECT params_json FROM raw_responses WHERE id=?", (raw.id,)).fetchone()[0])["ids"].split(",")
-            for pid in asked:
-                exists = pid in present
-                gone += not exists
-                detail = "" if exists else json.dumps(errs.get(pid, {"title": "missing"}))
-                conn.execute("INSERT OR REPLACE INTO deletion_checks VALUES (?,?,?,?,?,?)",
-                             (pid, d, raw.requested_at, int(exists), detail, raw.id))
+            gone += _record_lookup(conn, raw, d)
         conn.commit()
         out[f"day{d}"] = {"checked": len(ids), "gone": gone}
         log(f"  deletion check {d}d: {len(ids)} checked, {gone} gone")

@@ -121,6 +121,11 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
     yrows.append(["**total**", *tot])
     L.append(_table(["account", "posts", "release-related", "checkable claims", "resolved", "open"], yrows))
     L.append("")
+    sk = state.get("collection_skipped") or {}
+    if sk:
+        L.append("Pilot accounts NOT collected because their worst-case cost did not fit in the remaining X budget: " +
+                 ", ".join(f"@{u} ({v['posts']} posts, worst case ${v['worst_case_usd']})" for u, v in sk.items()) + ".")
+        L.append("")
     ex = dict(conn.execute("SELECT COALESCE(uncheckable_reason,'has checkable claim'), COUNT(*) FROM extractions "
                            "WHERE run='main' GROUP BY 1").fetchall())
     if ex:

@@ -75,7 +75,10 @@ def load_releases(path: Path | None = None) -> list[Release]:
 
 
 def load_signals(path: Path | None = None) -> list[dict]:
-    return read_csv(path or config.LEDGER / "signals.csv")
+    """Lab-sourced signals plus, if present, official X posts found by `xrf signals-x`."""
+    if path:
+        return read_csv(path)
+    return read_csv(config.LEDGER / "signals.csv") + read_csv(config.LEDGER / "signals_x.csv")
 
 
 def write_csv(path: Path, rows: list[dict], columns: list[str]) -> None:

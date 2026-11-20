@@ -120,6 +120,10 @@ under-recorded. This biases the "before any official signal" headline **in favou
 claims will look pre-signal that were not). Fix, once the X key is in: pull the official accounts and listed
 staff (`config/labs.yaml`, `config/lab_staff.yaml`) for the days before each release via full-archive search
 and add their model mentions as signals. That costs X reads; it is listed for Alex in STATUS.
+Implemented as `python -m xrf signals-x` (`xrf/signals_x.py`), run automatically at the start of `xrf pilot`:
+flagship releases only, 50 most recent matching posts in the 21 days before each release, written to
+`ledger/signals_x.csv` (the resolver reads both signal files). Worst case about 33 USD of the `x_reads` budget
+(66 flagship rows, expansions assumed billed); likely far less.
 
 ## D-009 (2026-11-20) Resolution rules (RULES.md v1)
 
