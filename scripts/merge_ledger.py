@@ -15,6 +15,15 @@ for f in sorted(src.glob("*_releases.csv")):
     rels += read_csv(f)
 for f in sorted(src.glob("*_signals.csv")):
     sigs += read_csv(f)
+import yaml  # noqa: E402
+fixes = yaml.safe_load((config.LEDGER / "merge_fixes.yaml").read_text()) or {}
+drop_r, drop_s = fixes.get("drop_releases") or {}, fixes.get("drop_signals") or {}
+rels = [r for r in rels if r.get("release_id") not in drop_r]
+sigs = [s for s in sigs if s.get("signal_id") not in drop_s and s.get("release_id") not in drop_r]
+for rid, kv in (fixes.get("set_fields") or {}).items():
+    for r in rels:
+        if r["release_id"] == rid:
+            r.update(kv)
 clean = lambda r, cols: {c: " ".join((r.get(c) or "").split()) for c in cols}
 rels = sorted((clean(r, RELEASE_COLUMNS) for r in rels), key=lambda r: (r["lab"], r["announced_at"] or r["api_available_at"] or r["consumer_available_at"], r["release_id"]))
 sigs = sorted((clean(s, SIGNAL_COLUMNS) for s in sigs), key=lambda s: (s["lab"], s["posted_at"], s["signal_id"]))

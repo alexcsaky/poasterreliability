@@ -1,0 +1,22 @@
+# Edits applied when merging the research CSVs (scripts/merge_ledger.py). Every edit has a reason.
+# Logged in docs/DECISIONS.md (D-019).
+drop_releases:
+  openai-gpt-5-1-codex-max: "announced and usable (Codex) 18 Nov 2025, before the ledger period; only its API launch fell inside"
+  alibaba-qwen-drive-1-0: "no official date found for any availability route; an undated row cannot resolve anything"
+  alibaba-webworld: "no official date found for any availability route"
+  zhipu-glm-5-3-flashx-legal: "on Z.ai's pricing page but no official dated announcement or release-notes entry"
+drop_signals:
+  moonshot-kimi-k2-6-s2: "no date: a signal cannot be placed before or after a post without one"
+  zhipu-glm-5-3-flash-s1: "no date"
+set_fields:
+  # Tier harmonisation across labs (D-019): the top general-purpose line is flagship; smaller/faster
+  # siblings and specialised variants are other, as for Gemini Flash vs Pro.
+  anthropic-claude-mythos-preview: {tier: flagship}
+  anthropic-claude-mythos-5: {tier: flagship}
+  anthropic-claude-mythos-5-1: {tier: flagship}
+  anthropic-claude-mythos-5-2: {tier: flagship}
+  deepseek-deepseek-v4-flash-preview: {tier: other}
+  deepseek-deepseek-v4-flash-0731: {tier: other}
+  deepseek-deepseek-v4-1-flash: {tier: other}
+  deepseek-deepseek-v4-1-flash-1017: {tier: other}
+  moonshot-kimi-k2-7-code: {tier: other}

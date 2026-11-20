@@ -41,7 +41,7 @@ labs:
     flagship_lines: ["DeepSeek-V", "DeepSeek-R"]
   - id: alibaba
     name: Alibaba (Qwen)
-    official_domains: [qwenlm.github.io, qwen.ai, chat.qwen.ai, alibabacloud.com, www.alibabacloud.com, help.aliyun.com, huggingface.co/Qwen, github.com/QwenLM, modelscope.cn, x.com/Alibaba_Qwen, x.com/alibaba_cloud]
+    official_domains: [qwenlm.github.io, qwen.ai, chat.qwen.ai, alibabacloud.com, www.alibabacloud.com, help.aliyun.com, huggingface.co/Qwen, huggingface.co/Wan-AI, github.com/QwenLM, github.com/Wan-Video, modelscope.cn, x.com/Alibaba_Qwen, x.com/alibaba_cloud]
     x_accounts: [Alibaba_Qwen, alibaba_cloud, JustinLin610]
     flagship_lines: ["Qwen-Max", "Qwen (largest open-weight release)"]
   - id: zhipu
@@ -51,6 +51,6 @@ labs:
     flagship_lines: ["GLM (numbered major/minor versions, top tier)"]
   - id: moonshot
     name: Moonshot AI (Kimi)
-    official_domains: [moonshot.ai, moonshot.cn, platform.moonshot.ai, kimi.com, www.kimi.com, huggingface.co/moonshotai, github.com/MoonshotAI, x.com/Kimi_Moonshot]
+    official_domains: [moonshot.ai, moonshot.cn, platform.moonshot.ai, platform.kimi.ai, kimi.ai, kimi.com, www.kimi.com, huggingface.co/moonshotai, github.com/MoonshotAI, x.com/Kimi_Moonshot]
     x_accounts: [Kimi_Moonshot]
     flagship_lines: ["Kimi K (numbered versions, top tier)"]
