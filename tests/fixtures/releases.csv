@@ -1,0 +1,5 @@
+release_id,lab,model,tier,modality,aliases,codenames,announced_at,consumer_available_at,api_available_at,open_weights_at,preview_at,status,price,context_window,benchmarks,source_urls,notes
+openai-gpt-9,openai,GPT-9,flagship,multimodal,gpt-9,Orion Prime (confirmed),2026-10-10T17:00:00Z,2026-10-10,2026-10-10,,,released,input $2/Mtok; output $12/Mtok,1000000,SWE-bench Verified=81.2%; GPQA Diamond=90.1%,https://openai.com/index/gpt-9/,synthetic
+openai-gpt-9-mini,openai,GPT-9 mini,other,multimodal,gpt-9-mini,,2026-06-01,,2026-06-01,,,released,,,,https://openai.com/index/gpt-9-mini/,synthetic
+google_deepmind-gemini-9-pro,google_deepmind,Gemini 9 Pro,flagship,multimodal,gemini-9-pro,,2026-10-20,2026-10-20,,,,released,,,,https://blog.google/technology/gemini-9/,synthetic
+google_deepmind-gemini-8-pro,google_deepmind,Gemini 8 Pro,flagship,multimodal,,,2026-03-01,2026-03-01,,,,released,,,,https://blog.google/technology/gemini-8/,synthetic

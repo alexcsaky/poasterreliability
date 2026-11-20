@@ -1,0 +1,56 @@
+# Labs covered by the release ledger (Stage 1).
+# official_domains: sources accepted as ground truth for this lab. A ledger row is valid only if
+# at least one of its source_urls is on one of these domains (or is a web.archive.org snapshot of one).
+# x_accounts: official lab accounts. Their posts are official signals, never cohort members.
+# flagship_lines: model families treated as tier=flagship (see RULES.md, "Tier").
+labs:
+  - id: openai
+    name: OpenAI
+    official_domains: [openai.com, chatgpt.com, learn.chatgpt.com, help.openai.com, platform.openai.com, cdn.openai.com, developers.openai.com, community.openai.com, github.com/openai, huggingface.co/openai, x.com/OpenAI, x.com/OpenAIDevs, x.com/ChatGPTapp, x.com/sama]
+    x_accounts: [OpenAI, OpenAIDevs, ChatGPTapp, OpenAINewsroom, sama]
+    flagship_lines: ["GPT-5", "GPT-6", "o-series reasoning (top tier)"]
+  - id: anthropic
+    name: Anthropic
+    official_domains: [anthropic.com, www.anthropic.com, docs.anthropic.com, docs.claude.com, platform.claude.com, claude.com, support.claude.com, support.anthropic.com, x.com/AnthropicAI, x.com/claudeai]
+    x_accounts: [AnthropicAI, claudeai]
+    flagship_lines: ["Claude Opus", "Claude Fable", "Claude Mythos"]
+  - id: google_deepmind
+    name: Google DeepMind
+    official_domains: [deepmind.google, blog.google, ai.google.dev, cloud.google.com, developers.googleblog.com, gemini.google, gemini.google.com, workspaceupdates.googleblog.com, storage.googleapis.com, research.google, x.com/GoogleDeepMind, x.com/GoogleAI, x.com/GeminiApp, x.com/googleaidevs, x.com/OfficialLoganK, x.com/demishassabis, huggingface.co/google]
+    x_accounts: [GoogleDeepMind, GoogleAI, GeminiApp, googleaidevs, Google, GoogleAIStudio, OfficialLoganK, demishassabis, sundarpichai]
+    flagship_lines: ["Gemini Pro", "Gemini Ultra", "Gemini Deep Think"]
+  - id: xai
+    name: xAI
+    official_domains: [x.ai, docs.x.ai, grok.com, x.com/xai, x.com/grok, x.com/elonmusk, huggingface.co/xai-org, github.com/xai-org]
+    x_accounts: [xai, grok, elonmusk]
+    flagship_lines: ["Grok (numbered major/minor versions, top tier)"]
+  - id: meta
+    name: Meta
+    official_domains: [ai.meta.com, about.fb.com, llama.com, www.llama.com, meta.ai, github.com/meta-llama, huggingface.co/meta-llama, huggingface.co/facebook, x.com/AIatMeta, x.com/Meta]
+    x_accounts: [AIatMeta, Meta, alexandr_wang]
+    flagship_lines: ["Llama (largest release)", "Meta Superintelligence Labs frontier models"]
+  - id: mistral
+    name: Mistral AI
+    official_domains: [mistral.ai, docs.mistral.ai, huggingface.co/mistralai, x.com/MistralAI]
+    x_accounts: [MistralAI]
+    flagship_lines: ["Mistral Large", "Mistral Medium", "Magistral (top tier)"]
+  - id: deepseek
+    name: DeepSeek
+    official_domains: [deepseek.com, www.deepseek.com, api-docs.deepseek.com, platform.deepseek.com, huggingface.co/deepseek-ai, github.com/deepseek-ai, x.com/deepseek_ai]
+    x_accounts: [deepseek_ai]
+    flagship_lines: ["DeepSeek-V", "DeepSeek-R"]
+  - id: alibaba
+    name: Alibaba (Qwen)
+    official_domains: [qwenlm.github.io, qwen.ai, chat.qwen.ai, alibabacloud.com, www.alibabacloud.com, help.aliyun.com, huggingface.co/Qwen, github.com/QwenLM, modelscope.cn, x.com/Alibaba_Qwen, x.com/alibaba_cloud]
+    x_accounts: [Alibaba_Qwen, alibaba_cloud, JustinLin610]
+    flagship_lines: ["Qwen-Max", "Qwen (largest open-weight release)"]
+  - id: zhipu
+    name: Zhipu AI (Z.ai)
+    official_domains: [z.ai, docs.z.ai, chat.z.ai, zhipuai.cn, bigmodel.cn, huggingface.co/zai-org, github.com/zai-org, x.com/Zai_org]
+    x_accounts: [Zai_org]
+    flagship_lines: ["GLM (numbered major/minor versions, top tier)"]
+  - id: moonshot
+    name: Moonshot AI (Kimi)
+    official_domains: [moonshot.ai, moonshot.cn, platform.moonshot.ai, kimi.com, www.kimi.com, huggingface.co/moonshotai, github.com/MoonshotAI, x.com/Kimi_Moonshot]
+    x_accounts: [Kimi_Moonshot]
+    flagship_lines: ["Kimi K (numbered versions, top tier)"]

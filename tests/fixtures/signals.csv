@@ -1,0 +1,2 @@
+signal_id,release_id,lab,model_ref,signal_type,posted_at,author,text,url,notes
+openai-gpt-9-s1,openai-gpt-9,openai,GPT-9,teaser,2026-10-05T12:00:00Z,@OpenAI,something big next week,https://x.com/OpenAI/status/1,synthetic

@@ -1,0 +1,29 @@
+# Unit prices used by the cost meter. Sources and access dates are in docs/DECISIONS.md.
+# The meter refuses to make calls to a provider whose block has confirmed: false.
+x:
+  confirmed: true           # docs.x.com pricing page, accessed 2026-11-20 (docs/api_docs_findings.md, D-002)
+  post_read_usd: 0.005      # per post returned (search, timelines, lookups)
+  user_read_usd: 0.010      # per user object returned
+  counts_recent_request_usd: 0.005
+  counts_all_request_usd: 0.010
+  # Not confirmed whether objects returned through expansions (includes.tweets / includes.users) are
+  # billed. The meter assumes they ARE (worst case), so recorded spend is an upper bound.
+  bill_expanded_posts: true
+  bill_expanded_users: true
+  search_max_results: 500   # full-archive search allows 10-500 per page
+  field_style: tweet        # 'tweet' (tweet.fields, note_tweet) or 'post' (post.fields, note_post); see `xrf probe`
+xai:
+  confirmed: true           # docs.x.ai pricing + x_search tool pages, accessed 2026-11-20 (D-002)
+  model: grok-4.20-0309-non-reasoning
+  input_per_mtok_usd: 1.25
+  output_per_mtok_usd: 2.50
+  x_search_per_post_usd: 0.005      # $5 per 1,000 posts fetched, not de-duplicated
+  x_search_per_profile_usd: 0.010   # $10 per 1,000 profiles fetched
+  max_posts_per_call_assumed: 200   # for worst-case pre-call estimates
+anthropic:
+  confirmed: true           # Anthropic first-party list prices, cached 2026-11-03 (claude-api reference)
+  models:
+    claude-haiku-5-5:  {input_per_mtok_usd: 0.10, output_per_mtok_usd: 0.50}
+    claude-sonnet-5-5: {input_per_mtok_usd: 2.00, output_per_mtok_usd: 10.00}
+    claude-opus-5-5:   {input_per_mtok_usd: 4.00, output_per_mtok_usd: 20.00}
+  image_tokens_estimate: 1600   # per image, for pre-call worst-case estimates only

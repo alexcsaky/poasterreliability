@@ -1,0 +1,18 @@
+# LLM provider: Anthropic (key in ANTHROPIC_API_KEY). Prices in config/pricing.yaml.
+provider: anthropic
+pass1:            # is this post about an AI model release?
+  model: claude-haiku-5-5
+  effort: low
+  max_tokens: 1024
+pass2:            # claim extraction, with vision
+  model: claude-sonnet-5-5
+  effort: medium
+  max_tokens: 8000
+matcher:          # codename / loose-name to ledger alias matching
+  model: claude-sonnet-5-5
+  effort: low
+  max_tokens: 2000
+audit_alt:        # second pass-2 run on the audit sample, different model
+  model: claude-opus-5-5
+  effort: medium
+  max_tokens: 8000
