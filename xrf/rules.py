@@ -176,16 +176,24 @@ def _sha(b: bytes) -> str:
 
 
 def assert_rules_tagged() -> str:
-    """Refuse to run resolution unless RULES.md equals the version at the rules tag, or every change
-    since is accompanied by a dated DECISIONS.md entry mentioning RULES.md (checked loosely: the
-    current RULES.md hash must appear in DECISIONS.md)."""
+    """Refuse to run resolution against untagged rules. RULES.md must equal the version frozen at the rules-v1
+    tag: checked against the git tag when it exists, else against RULES.lock (committed with the tag; it holds the
+    tag name and the SHA-256 of RULES.md at tagging). A later change is accepted only if DECISIONS.md has a dated
+    entry recording 'RULES.md sha256 <first 12 hex>' of the new file."""
     cur = (config.ROOT / "RULES.md").read_bytes()
+    frozen = None
     try:
-        tagged = subprocess.run(["git", "-C", str(config.ROOT), "show", f"{RULES_TAG}:RULES.md"],
-                                capture_output=True, check=True).stdout
+        frozen = _sha(subprocess.run(["git", "-C", str(config.ROOT), "show", f"{RULES_TAG}:RULES.md"],
+                                     capture_output=True, check=True).stdout)
     except (subprocess.CalledProcessError, FileNotFoundError):
-        raise RuntimeError(f"git tag {RULES_TAG} not found: resolution refuses to run against untagged rules")
-    if tagged == cur:
+        lock = config.ROOT / "RULES.lock"
+        if lock.exists():
+            for line in lock.read_text().splitlines():
+                if line.startswith(RULES_TAG + " "):
+                    frozen = line.split()[1]
+    if frozen is None:
+        raise RuntimeError(f"neither git tag {RULES_TAG} nor RULES.lock found: resolution refuses to run against untagged rules")
+    if _sha(cur) == frozen:
         return RULES_TAG
     h = _sha(cur)[:12]
     decisions = (config.ROOT / "docs" / "DECISIONS.md").read_text(encoding="utf-8")

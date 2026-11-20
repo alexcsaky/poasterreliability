@@ -262,3 +262,11 @@ Applied by `scripts/merge_ledger.py` from `ledger/merge_fixes.yaml`, each with i
 - After the rate was measured, blank fields in the first pass were filled from the second pass where it cited an
   official source: price, context window and benchmarks always, availability dates only where both passes agreed
   on status. 16 rows gained values; each says so in its notes and carries the extra source URLs.
+
+## D-021 (2026-11-20) rules-v1: git tag plus a committed lock file
+
+`RULES.md` was frozen as `rules-v1` on 2026-11-20. The annotated git tag is created locally, but this build
+session's git proxy accepts pushes only to the working branch, so the tag could not be pushed. So that a fresh
+clone still refuses to resolve against changed rules, `RULES.lock` records the tag name and the SHA-256 of
+`RULES.md` at tagging; `xrf/rules.py:assert_rules_tagged` checks the git tag when present and the lock file
+otherwise. Alex: push the tag (`git push origin rules-v1`) after merging, or create it on the merge commit.
