@@ -90,7 +90,8 @@ def _in(t: datetime, w: Window, end: datetime) -> bool:
     return lo <= t <= end
 
 
-def timing_verdict(post_t: datetime, w: Window, end: datetime, rels: list[Release], as_of: datetime) -> tuple[str, Release | None, str]:
+def timing_verdict(post_t: datetime, w: Window, end: datetime, rels: list[Release], as_of: datetime,
+                   is_family: bool = False) -> tuple[str, Release | None, str]:
     if not rels:
         if as_of > end + GRACE_NEVER_SHIPPED:
             return "incorrect", None, "no matching release in the ledger by window end + 14 days"
@@ -99,7 +100,8 @@ def timing_verdict(post_t: datetime, w: Window, end: datetime, rels: list[Releas
     before = [r for r in released if r.release_time < post_t - timedelta(hours=0)]
     after = sorted([r for r in released if r.release_time >= post_t or (w.point and r.release_time >= w.point - timedelta(hours=12))],
                    key=lambda r: r.release_time)
-    if before and not after and len(before) == len(rels) and not any(r.preview_time and r.preview_time >= post_t for r in rels):
+    if not is_family and before and not after and len(before) == len(rels) \
+            and not any(r.preview_time and r.preview_time >= post_t for r in rels):
         return "uncheckable", before[0], "already released before the post (not a forecast)"
     first = after[0] if after else None
     if first and _in(first.release_time, w, end) and (not w.lower or first.release_time >= w.lower):
@@ -262,7 +264,8 @@ def resolve_all(conn: sqlite3.Connection, run: str = "main", as_of: datetime | N
             tier = claimed_tier(rels, c["model_name"], lab)
             ends = {"main": w.end, **w.variants} if w.variants else {"main": w.end}
             for variant, end in ends.items():
-                v, rel, why = timing_verdict(post_t, w, end, rels, as_of)
+                v, rel, why = timing_verdict(post_t, w, end, rels, as_of,
+                                             is_family=(method == "llm_family" or len(rels) > 1))
                 target = rel or (min((r for r in rels if r.release_time and r.release_time >= post_t),
                                      key=lambda r: r.release_time, default=None))
                 sig = (None, None, None)

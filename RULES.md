@@ -39,21 +39,21 @@ window starts at the post's timestamp and ends at the deadline below. "Week" is 
 
 | Phrase in the post | Deadline (window end) | Notes |
 |---|---|---|
-| "today", "tonight", "in a few hours", "later today" | post time + 24 h | |
+| "today", "tonight", "later today", "this morning/afternoon/evening", "in a few hours", "in N hours" | post time + 24 h | |
 | "tomorrow" | post time + 48 h | |
-| "this week", "later this week" | end of the post's ISO week | posted on a weekend: still that Sunday |
-| "this weekend" | end of the post's ISO week | |
+| "this week", "later this week", "end of the week", "by the weekend", "within the week" | end of the post's ISO week | posted on a weekend: still that Sunday |
+| "this weekend", "over the weekend" | end of the post's ISO week | |
 | "next week" | end of the following ISO week | released before the following week starts: `partial` (early) |
 | "in N days" / "in N weeks" | post time + N days (+1 day grace) / N weeks (+1 day grace) | |
-| "this month", "later this month" | end of the post's calendar month | |
+| "this month", "later this month", "end of the month", "within the month" | end of the post's calendar month | |
 | "next month" | end of the following calendar month | released before that month starts: `partial` (early) |
-| "imminent", "any day now", "very soon", "any minute", "momentarily" | post time + 7 days | |
-| "soon", "coming", "shortly", "around the corner" | tested at 7, 14 **and** 30 days | headline uses 14 days; the 7- and 30-day results are reported as sensitivity |
-| "in the coming weeks" | post time + 30 days | |
-| "by end of year", "before the end of the year", "this year" | 31 Dec of the post's year, 23:59:59 | |
+| "imminent", "any day now", "very soon", "super soon", "any minute", "any moment", "any hour now", "momentarily" | post time + 7 days | |
+| "soon", "soonish", "coming", "shortly", "around the corner", "on the way", "incoming" | tested at 7, 14 **and** 30 days | headline uses 14 days; the 7- and 30-day results are reported as sensitivity |
+| "in the coming weeks", "next few weeks", "in a few weeks", "within weeks" | post time + 30 days | |
+| "by end of year", "before the year ends", "EOY", "this year", "before <next year>" | 31 Dec of the post's year, 23:59:59 | |
 | "Q1"…"Q4", "H1", "H2" (+ optional year) | end of that quarter or half | |
-| a named weekday ("Thursday") | that day; the next one on or after the post date | released ±12 h of that day counts; earlier: `incorrect` unless within 12 h; later: `incorrect` |
-| an explicit date ("Dec 3", "12/3") | that day | same ±12 h tolerance |
+| a named weekday ("Thursday", "next Thursday") | that day: the next one on or after the post date | released within ±12 h of that UTC day: `correct`; otherwise `incorrect` |
+| an explicit date ("Dec 3", "3 December", "12/3" read as month/day) | that day (a date more than 60 days before the post means next year) | same ±12 h tolerance |
 | "before <event>" (e.g. "before Gemini 4") | the release time of that event's ledger row | if the event has no ledger row, `uncheckable` |
 | no time phrase at all | **unstated** | the claim is a timing claim only if it has a window; with none it is stored as `uncheckable` (reason: no window) |
 

@@ -74,7 +74,7 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
     L = []
     L.append("# Pilot report: X release-forecaster tracker")
     L.append("")
-    L.append(f"Generated {datetime.now(timezone.utc):%Y-%m-%d %H:%M UTC} by `python -m xrf rebuild`; verdicts as of "
+    L.append(f"Generated {datetime.now(timezone.utc):%Y-%m-%d %H:%M UTC} (regenerate with `python -m xrf rebuild`); verdicts as of "
              f"{as_of:%Y-%m-%d %H:%M UTC}. Every figure below is regenerated from stored raw API responses, the ledger "
              "and `RULES.md` (tag `rules-v1`). Nothing here is published; the repo is private.")
     L.append("")

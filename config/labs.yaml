@@ -16,7 +16,7 @@ labs:
     flagship_lines: ["Claude Opus", "Claude Fable", "Claude Mythos"]
   - id: google_deepmind
     name: Google DeepMind
-    official_domains: [deepmind.google, blog.google, ai.google.dev, cloud.google.com, developers.googleblog.com, gemini.google, gemini.google.com, workspaceupdates.googleblog.com, storage.googleapis.com, research.google, x.com/GoogleDeepMind, x.com/GoogleAI, x.com/GeminiApp, x.com/googleaidevs, x.com/OfficialLoganK, x.com/demishassabis, huggingface.co/google]
+    official_domains: [deepmind.google, aistudio.google.com, blog.google, ai.google.dev, cloud.google.com, developers.googleblog.com, gemini.google, gemini.google.com, workspaceupdates.googleblog.com, storage.googleapis.com, research.google, x.com/GoogleDeepMind, x.com/GoogleAI, x.com/GeminiApp, x.com/googleaidevs, x.com/OfficialLoganK, x.com/demishassabis, huggingface.co/google]
     x_accounts: [GoogleDeepMind, GoogleAI, GeminiApp, googleaidevs, Google, GoogleAIStudio, OfficialLoganK, demishassabis, sundarpichai]
     flagship_lines: ["Gemini Pro", "Gemini Ultra", "Gemini Deep Think"]
   - id: xai
