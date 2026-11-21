@@ -1,6 +1,6 @@
 # Status
 
-_Last updated 2026-11-20._
+_Last updated 2026-11-21._
 
 ## Current facts
 
@@ -17,27 +17,31 @@ _Last updated 2026-11-20._
 - **Stages 2–9 are built and tested** (`xrf/`, `python -m xrf -h`). 18 offline tests run the whole pipeline on a
   fake X/LLM world, including cap refusal, span validation, the daily job with hashes and commits, deletion
   checks, and an offline `rebuild` that reproduces the report byte for byte with no calls and no spend.
-- **No API keys were available**, so Stages 2–8 have not run against real data: there is no cohort yet (STOP 1 not
-  reached), no posts, claims or verdicts. `report/pilot.md` exists in its no-data form. Spend: 0 USD on every budget.
+- **First live run (2026-11-21) halted in Stage 2** (D-022). The X account's prepaid credit ran out (HTTP 402
+  `credits-depleted`) after the per-release discovery sweeps, and `ANTHROPIC_API_KEY` was empty. **No cohort exists
+  yet (STOP 1 not reached), no posts collected, no claims, verdicts or report figures.**
+- Done live: `probe` (`tweet.fields` confirmed, `field_style: tweet` kept); `signals-x` (310 official pre-release
+  posts on X, `ledger/signals_x.csv`); cohort sweeps for every release in the window (5,255 discovery posts,
+  3,476 candidate accounts, 134 stored pages). Not done: Grok discovery, lookups, activity floor, ranking, pilot pick.
+- **Spend (project meter, worst-case pricing that bills expansions):** X reads 2.70 / 150 USD, discovery
+  30.74 / 75 USD, model calls 0.00 / 75 USD. Separately, about **4.18 USD of real xAI spend outside the meter**:
+  test runs made real Grok calls while a real `XAI_API_KEY` was set (fixed in `tests/conftest.py`).
+- The run is resumable at no cost: stored 2xx responses are replayed, `cohort_as_of` is fixed at 2026-11-21T19:00Z.
 - **X API facts were checked against the official docs** (D-002, `docs/api_docs_findings.md`): posts $0.005 and
   users $0.010 per object; full-archive search available on pay-per-use; user timelines stop at 800 posts when
   replies are excluded, so collection uses full-archive search (D-003); `impression_count` is public.
 
 ## In progress
 
-- Nothing running. The next step needs keys (below).
+- Nothing running. Blocked on X credit and the Anthropic key (below).
 
 ## Waiting on Alex
 
-1. **Keys.** Set `X_BEARER_TOKEN` (X pay-per-use credits; the pilot can spend at most 150 USD of X reads + 75 USD of
-   discovery) and `ANTHROPIC_API_KEY` (at most 75 USD). `XAI_API_KEY` is optional (Grok, for cohort discovery only).
-   Then:
-   ```bash
-   python -m xrf probe     # one ~0.01 USD call: confirms tweet.fields vs post.fields (D-002)
-   python -m xrf pilot     # signals-x, cohort (STOP 1 output), collection, extraction, resolution, audit, report; stops at STOP 2
-   ```
-   The cohort and pilot subset will land in `cohort/` for you to look over; the run continues with the 15 pilot
-   accounts only, as the brief says.
+1. **Add X credit and set `ANTHROPIC_API_KEY`.** The X balance ran out at about 33 USD of metered reads. To
+   finish the pilot within the caps the account needs up to about 44 USD more for discovery plus up to 147 USD for
+   collection (worst case; actual likely lower). `ANTHROPIC_API_KEY` was empty in this session. Then
+   `python -m xrf pilot` resumes from the stored responses; the cohort summary and 15 pilot accounts will be added
+   here at STOP 1 and the run will continue with the pilot only.
 2. **Terms of use (D-017), before the pilot runs.** X's pay-per-use agreement bars providing licensed content "to
    any third party except as expressly permitted"; sending post text to Anthropic for extraction may fall under it.
    Public datasets may contain post IDs only, not text. Naming accounts in analysis is not addressed.
@@ -52,3 +56,6 @@ _Last updated 2026-11-20._
 8. **Daily job:** where to publish the daily hash line so it is a public timestamp (D-016), and when to schedule it.
    Not scheduled.
 9. **Raw data home:** `data/raw/` (the evidence for every figure) is not in git; decide where it lives (D-005).
+10. **Official X signals look uneven.** `ledger/signals_x.csv` has 310 posts, but many releases (e.g. OpenAI GPT-5.4,
+    GPT-5.5) show none in the 21 days before release. Worth a look at the official-account list before the
+    "before any official signal" figures are trusted (`report/what_broke.md`).

@@ -213,7 +213,7 @@ def main(argv=None):
     for name, fn, help_ in [
         ("costs", cmd_costs, "spend against caps"),
         ("ledger-validate", cmd_ledger_validate, "check ledger rows and official sources"),
-        ("reresearch-sample", cmd_reresearch_sample, "Stage 1: draw the 20% re-research sample"),
+        ("reresearch-sample", cmd_reresearch_sample, "Stage 1: draw the 20%% re-research sample"),
         ("reresearch-compare", cmd_reresearch_compare, "Stage 1: disagreement rate vs the second pass"),
         ("signals-x", cmd_signals_x, "Stage 1b: official pre-release posts on X (needs X key)"),
         ("probe", cmd_probe, "one cheap X call to confirm field names"),

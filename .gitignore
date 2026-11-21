@@ -5,3 +5,5 @@ __pycache__/
 data/xrf.sqlite
 data/xrf.sqlite-*
 data/test*/
+# Raw X/LLM responses and the derived database stay out of git (D-005).
+data/

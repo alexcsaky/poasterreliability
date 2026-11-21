@@ -30,3 +30,5 @@ os.environ["XRF_DATA"] = str(_TMP / "data")
 os.environ.pop("XRF_OFFLINE", None)
 os.environ["X_BEARER_TOKEN"] = "test-not-real"
 os.environ["ANTHROPIC_API_KEY"] = "test-not-real"
+# Grok discovery is not faked: never let a real xAI key reach the tests (they would make paid calls).
+os.environ.pop("XAI_API_KEY", None)

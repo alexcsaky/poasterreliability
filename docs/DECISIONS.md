@@ -274,3 +274,21 @@ session's git proxy accepts pushes only to the working branch, so the tag could 
 clone still refuses to resolve against changed rules, `RULES.lock` records the tag name and the SHA-256 of
 `RULES.md` at tagging; `xrf/rules.py:assert_rules_tagged` checks the git tag when present and the lock file
 otherwise. Alex: push the tag (`git push origin rules-v1`) after merging, or create it on the merge commit.
+
+## D-022 (2026-11-21) First live run: halted at Stage 2 (X credits depleted, no Anthropic key)
+
+- `python -m xrf probe` confirmed `tweet.fields` works; `field_style` stays `tweet`.
+- `signals-x` ran: 310 official X pre-release posts written to `ledger/signals_x.csv` (2.70 USD metered).
+- `cohort` ran every per-release sweep (5,255 discovery posts, 3,476 candidate accounts, 30.74 USD metered), then
+  X answered the next full-archive search with HTTP 402 `credits-depleted`. The X account's prepaid balance ran
+  out well below the caps; the meter cannot see the balance, only the caps. Grok discovery, lookups, the activity
+  floor, ranking and everything after did not run. No cohort exists yet.
+- `ANTHROPIC_API_KEY` was empty in this session, so Stages 4–8 could not have run in any case. The pilot was not
+  started with a substitute key.
+- Resumption: only 2xx responses are reused from the store, so after a top-up `python -m xrf pilot` (or
+  `python -m xrf cohort`) replays the 134 stored pages at no cost and continues from the failed request.
+  `cohort_as_of` is fixed in `config/run_state.json` at 2026-11-21T19:00:00Z, so the replay makes identical requests.
+- Fixes: `tests/conftest.py` now removes `XAI_API_KEY`. Grok discovery is not faked, so with a real key in the
+  environment each test run made three real Grok calls (four runs, about 4.18 USD of xAI spend, recorded only in
+  throwaway test databases and not in the project meter). `.gitignore` now excludes all of `data/` (raw
+  responses were not ignored before; D-005). A literal `%` in the CLI help text broke `python -m xrf -h`.
