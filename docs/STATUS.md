@@ -1,6 +1,6 @@
 # Status
 
-_Last updated 2026-11-21._
+_Last updated 2026-11-23._
 
 ## Current facts
 
@@ -27,6 +27,9 @@ _Last updated 2026-11-21._
   30.74 / 75 USD, model calls 0.00 / 75 USD. Separately, about **4.18 USD of real xAI spend outside the meter**:
   test runs made real Grok calls while a real `XAI_API_KEY` was set (fixed in `tests/conftest.py`).
 - The run is resumable at no cost: stored 2xx responses are replayed, `cohort_as_of` is fixed at 2026-11-21T19:00Z.
+  A bug that made re-runs build differently ordered queries (and so pay again) was fixed on 2026-11-23 (D-023).
+- **Resumed 2026-11-23:** all 68 stored sweeps replayed free; the first new request still got HTTP 402
+  `credits-depleted`. `ANTHROPIC_API_KEY` is saved on the environment but still empty in this session's container.
 - **X API facts were checked against the official docs** (D-002, `docs/api_docs_findings.md`): posts $0.005 and
   users $0.010 per object; full-archive search available on pay-per-use; user timelines stop at 800 posts when
   replies are excluded, so collection uses full-archive search (D-003); `impression_count` is public.
@@ -37,7 +40,9 @@ _Last updated 2026-11-21._
 
 ## Waiting on Alex
 
-1. **Add X credit and set `ANTHROPIC_API_KEY`.** The X balance ran out at about 33 USD of metered reads. To
+1. **X credit and the Anthropic key.** X still reports credits depleted (auto-recharge did not fire; check it in
+   the X developer console). `ANTHROPIC_API_KEY` is saved on the environment but not visible in this session's
+   container (saved variables load at session start). The X balance ran out at about 33 USD of metered reads. To
    finish the pilot within the caps the account needs up to about 44 USD more for discovery plus up to 147 USD for
    collection (worst case; actual likely lower). `ANTHROPIC_API_KEY` was empty in this session. Then
    `python -m xrf pilot` resumes from the stored responses; the cohort summary and 15 pilot accounts will be added

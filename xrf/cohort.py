@@ -69,9 +69,8 @@ def sweep(conn: sqlite3.Connection, as_of: datetime, pages_per_release: int = 1,
     n = 0
     for r in sorted(rels, key=lambda r: r.id):
         t0 = r.dt("announced_at") or r.release_time
-        names = sorted({r["model"]} | {a.split("(")[0].strip() for a in (r["aliases"] or "").split(";") if a.strip()}
-                       | {c.split("(")[0].strip() for c in (r["codenames"] or "").split(";") if c.strip()},
-                       key=len)[:6]
+        names = xapi.ordered_terms({r["model"]} | {a.split("(")[0].strip() for a in (r["aliases"] or "").split(";") if a.strip()}
+                                   | {c.split("(")[0].strip() for c in (r["codenames"] or "").split(";") if c.strip()})[:6]
         q = "(" + " OR ".join(f'"{x}"' for x in names if x) + ") -is:retweet -is:reply"
         s, e = max(start, t0 - timedelta(days=7)), min(end, t0 + timedelta(days=2))
         if s >= e:

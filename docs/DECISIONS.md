@@ -292,3 +292,16 @@ otherwise. Alex: push the tag (`git push origin rules-v1`) after merging, or cre
   environment each test run made three real Grok calls (four runs, about 4.18 USD of xAI spend, recorded only in
   throwaway test databases and not in the project meter). `.gitignore` now excludes all of `data/` (raw
   responses were not ignored before; D-005). A literal `%` in the CLI help text broke `python -m xrf -h`.
+
+## D-023 (2026-11-23) Search-term order made deterministic; stored responses aliased
+
+- Bug: cohort sweeps and `signals-x` built each query from a set of model names sorted by length only. Ties came
+  out in hash order, which changes between Python processes, so a re-run built a differently ordered query, missed
+  the store and would have paid X again. Found when the resumed `cohort` run asked X for the first sweep again.
+- Fix: `xapi.ordered_terms` sorts by (length, text); used by both. Test runs the ordering under six hash seeds.
+- `scripts/alias_reordered_queries.py` (run once, no network) replayed both stages and, for each request that
+  missed only because of term order, stored the same response body again under the new request key with
+  usd=0. 79 requests already matched, 53 were aliased, 4 had no stored response (three sweeps never fetched
+  before the 402, and one 0-post signals search whose name selection changed at the cut).
+- After the fix the resumed `cohort` replays all 68 per-release sweeps at no cost; the first new request still
+  gets HTTP 402 `credits-depleted` (2026-11-23), so X auto-recharge has not happened.

@@ -68,3 +68,16 @@ def test_baseline():
     # one OpenAI flagship release (10 Oct) in ~11 months of daily 7-day windows
     assert 0 < p < 0.05
     assert b.p(None, "any", 30, datetime(2026, 11, 1, tzinfo=timezone.utc)) > p
+
+
+def test_search_terms_order_is_stable_across_processes():
+    """Equal-length aliases used to come out in hash order, so re-runs built different queries (cache misses,
+    paid twice). The order must not depend on PYTHONHASHSEED."""
+    import os
+    import subprocess
+    import sys
+    code = ("from xrf import xapi; print(xapi.ordered_terms({'gpt-x-mini','GPT-X-Mini','gpt-x-nano','GPT-X','b','a'}))")
+    outs = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True,
+                           env={**os.environ, "PYTHONHASHSEED": str(seed)}).stdout for seed in range(6)}
+    assert len(outs) == 1
+    assert outs.pop().strip() == "['a', 'b', 'GPT-X', 'GPT-X-Mini', 'gpt-x-mini', 'gpt-x-nano']"

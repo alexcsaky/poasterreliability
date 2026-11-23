@@ -141,6 +141,12 @@ def paginate(conn, path: str, params: dict, *, budget: str, kind: str, max_pages
         params[token_param] = nxt
 
 
+def ordered_terms(terms) -> list[str]:
+    """Deterministic order for search terms: by length, then text. Sorting a set by length alone leaves ties
+    in hash order, which changes between processes, so the query (and its cache key) changed on every run."""
+    return sorted(set(terms), key=lambda x: (len(x), x))
+
+
 def search_all(conn, query: str, start_time: str, end_time: str, *, budget: str, kind: str = "full",
                max_results: int | None = None, max_pages: int = 10_000, sort_order: str = "recency",
                tag: str | None = None) -> Iterator[rawstore.Raw]:

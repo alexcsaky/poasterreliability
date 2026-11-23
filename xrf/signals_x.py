@@ -28,7 +28,7 @@ def collect(conn, flagship_only: bool = True, per_release: int = 50, log=print) 
         t = r.release_time or r.preview_time or r.dt("announced_at")
         if not t:
             continue
-        names = sorted({r["model"]} | {a.strip() for a in (r["aliases"] or "").split(";") if a.strip()}, key=len)[:4]
+        names = xapi.ordered_terms({r["model"]} | {a.strip() for a in (r["aliases"] or "").split(";") if a.strip()})[:4]
         accts = _accounts(r["lab"])
         q = f"({' OR '.join('from:' + a for a in accts)}) ({' OR '.join(chr(34) + n + chr(34) for n in names)}) -is:retweet"
         if len(q) > 1000:
