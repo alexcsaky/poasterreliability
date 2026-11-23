@@ -305,3 +305,14 @@ otherwise. Alex: push the tag (`git push origin rules-v1`) after merging, or cre
   before the 402, and one 0-post signals search whose name selection changed at the cut).
 - After the fix the resumed `cohort` replays all 68 per-release sweeps at no cost; the first new request still
   gets HTTP 402 `credits-depleted` (2026-11-23), so X auto-recharge has not happened.
+
+## D-024 (2026-11-23) Ranking sample slimmed to fit the discovery cap
+
+After the X top-up, the broad release sweep, Grok discovery (0.98 USD) and 1,500 user lookups (15 USD) took
+discovery spend to 56.25 of 75 USD, and the activity floor (one `counts/all` call per candidate at 0.01 USD)
+needs about 5 USD more. Ranking as built fetched 30 posts per passing account with quoted posts expanded
+(worst case 0.30 USD each); with about 110 accounts expected to pass, it would have hit the cap partway, wasting
+what was spent before the refusal. Before any ranking call was made, the run was stopped and ranking changed to
+fetch 20 recent release posts per account with `public_metrics` and referenced-post types only (no expansions;
+worst case 0.10 USD). Median impressions over 20 posts instead of 30 is coarser but adequate for a reach ranking.
+The cap was not changed.

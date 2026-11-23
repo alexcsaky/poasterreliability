@@ -34,7 +34,7 @@ def _style() -> str:
 
 def fields(kind: str = "full") -> dict:
     """Request parameters for post payloads. kind: full (collection), sweep (discovery, no user expansion),
-    id (deletion checks)."""
+    rank (impressions only, no expansions), id (deletion checks)."""
     t = _style() == "tweet"
     fkey = "tweet.fields" if t else "post.fields"
     note = "note_tweet" if t else "note_post"
@@ -42,6 +42,8 @@ def fields(kind: str = "full") -> dict:
     base = f"id,text,author_id,created_at,conversation_id,in_reply_to_user_id,lang,public_metrics,{refs},attachments,entities,{note}"
     if kind == "id":
         return {fkey: "id,created_at,author_id"}
+    if kind == "rank":   # impressions for ranking only: no expansions, so nothing extra is billed (D-024)
+        return {fkey: f"id,author_id,created_at,public_metrics,{refs}"}
     out = {fkey: base, "media.fields": "media_key,type,url,preview_image_url,alt_text"}
     if kind == "full":
         out["expansions"] = f"author_id,{refs}.id,{refs}.id.author_id,attachments.media_keys"

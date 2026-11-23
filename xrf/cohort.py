@@ -227,14 +227,14 @@ def apply_floor(conn, as_of: datetime, log=print) -> tuple[list[dict], list[dict
 
 # ---- 5. rank ------------------------------------------------------------------------------------
 
-def rank(conn, passed: list[dict], as_of: datetime, impression_sample: int = 30, log=print) -> list[dict]:
+def rank(conn, passed: list[dict], as_of: datetime, impression_sample: int = 20, log=print) -> list[dict]:
     start, end = window(as_of)
     end_settled = end - timedelta(days=SETTLE_DAYS)
     out = []
     for u in passed:
         imps = []
         for raw in xapi.search_all(conn, release_query(f"from:{u['username']}"), _iso(start), _iso(end_settled),
-                                   budget=BUDGET, kind="sweep", max_results=max(10, impression_sample),
+                                   budget=BUDGET, kind="rank", max_results=max(10, impression_sample),
                                    max_pages=1, sort_order="recency", tag=f"rank:{u['username']}"):
             for t in raw.json().get("data") or []:
                 if xparse.post_kind(t) in ("original", "quote"):
