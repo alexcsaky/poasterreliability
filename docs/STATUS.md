@@ -17,18 +17,18 @@ _Last updated 2026-11-24._
 - **Stages 2–9 are built and tested** (`xrf/`, `python -m xrf -h`). 18 offline tests run the whole pipeline on a
   fake X/LLM world, including cap refusal, span validation, the daily job with hashes and commits, deletion
   checks, and an offline `rebuild` that reproduces the report byte for byte with no calls and no spend.
-- **Stage 2 cohort built (provisional, 2026-11-24): 67 accounts** under the tightened bar (D-025): at least 2
-  pre-release posts naming a ledger model, at least 1,000 followers, not lab staff, at least 10 strict-rule release
-  posts in 90 days, ranked by median impressions. Of 4,288 candidates, 128 met the pre-release requirement; 41 then
-  failed the follower floor, 28+15 were lab accounts or staff, 20 failed the activity floor. Files: `cohort/`.
-- **Pilot accounts (15, 5 per third):** top: @ArtificialAnlys, @LuminaBench, @TekonBurns, @Ananth7e, @laopai1990;
-  middle: @0x0SojalSec, @Mr_nexp, @Haleeeemahh, @MLB_Connection, @Kevin_Logan; bottom: @LDT0545, @thisisdimm,
-  @aapakari, @arnaudmercier, @JayaNayak21. **Not yet collected.**
-- **Known weakness:** the pre-release count comes from sweeps that kept 100 posts per release over a window from
-  7 days before to 2 days after launch, so launch-day posts crowd out earlier ones. Well-known leak/early-news
-  accounts score 0-1 (@legit_api, @btibor91, @kimmonismus, @scaling01, @testingcatalog) and are excluded.
+- **Stage 2 cohort built (2026-11-24): 100 accounts** (107 passed; top 100 by median impressions). Bar (D-025,
+  D-026): at least 2 posts naming a ledger model before its announcement (from per-release and flagship pre-launch
+  sweeps) or a seed account; at least 1,000 followers; not lab staff; at least 10 strict-rule release posts in
+  90 days. Pool 4,477; 176 met the pre-release requirement; 16 of the 19 seeds are in (out: @legit_api and
+  @apples_jimmy on the activity floor, @chatgpt21 does not exist). 13 of the top 22 are seeds; @kimmonismus is #1,
+  @iruletheworldmo #10. Files: `cohort/`.
+- **Pilot accounts (15, 5 per third, random, seed 20261119):** top: @ArtificialAnlys, @NFT_Chen, @ChrisGPT, @morganlinton, @marcthecreatorr; middle:
+  @laopai1990, @Its_lakshya_ai, @mrfanduu, @hakmgpt, @gadi_neelesh; bottom: @AI_Screening, @R2Cdev_, @glitch_catAI, @MRehan_5, @melophile0646. **Not yet collected.**
+- The pre-release count still undercounts (relevance-ranked samples of 100 posts per release), which is why the
+  known leakers needed seeding.
 - Done live: `probe` (`tweet.fields` confirmed); `signals-x` (310 official pre-release posts, `ledger/signals_x.csv`).
-- **Spend (project meter):** X reads 2.70 / 150 USD, discovery 82.41 / 100 USD (cap raised from 75 by Alex,
+- **Spend (project meter):** X reads 2.70 / 150 USD, discovery 91.17 / 100 USD (cap raised from 75 by Alex,
   D-025), model calls 0.00 / 75 USD. Separately about 4.18 USD of xAI spend outside the meter from test runs (fixed).
 - Fixed along the way: X out of credit (topped up); non-deterministic query order (D-023); ranking slimmed to fit
   (D-024); candidate pool inflated by re-runs (D-025). `ANTHROPIC_API_KEY` is still empty in this session.
@@ -38,13 +38,12 @@ _Last updated 2026-11-24._
 
 ## In progress
 
-- Nothing running. Cohort awaiting Alex on the pre-release weakness before collection (below).
+- Nothing running. Cohort built; collection waits for Alex to confirm the pilot subset (below).
 
 ## Waiting on Alex
 
-1. **Cohort pre-release check and the Anthropic key.** Decide whether to re-run the pre-release check with
-   searches limited to the 7 days before each announcement (see chat, 2026-11-24) before collecting the pilot.
-   `ANTHROPIC_API_KEY` is saved on the environment but empty in this session's container.
+1. **Pilot subset and the Anthropic key.** Confirm the random pilot (or ask for named forecasters in it) before
+   collection. `ANTHROPIC_API_KEY` is saved on the environment but empty in this session's container.
 2. **Terms of use (D-017), before the pilot runs.** X's pay-per-use agreement bars providing licensed content "to
    any third party except as expressly permitted"; sending post text to Anthropic for extraction may fall under it.
    Public datasets may contain post IDs only, not text. Naming accounts in analysis is not addressed.
