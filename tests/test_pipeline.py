@@ -156,3 +156,20 @@ def test_cap_enforced_end_to_end(conn):
     with pytest.raises(costs.CapExceeded):
         collect.collect_account(conn, "alice", datetime(2026, 9, 1, tzinfo=timezone.utc),
                                 datetime(2026, 9, 2, tzinfo=timezone.utc))
+
+
+def test_seeded_account_skips_pre_release_rule(conn):
+    """D-026: seeds join the pool by hand and skip only the pre-release requirement."""
+    seed_file = config.CONFIG / "seed_accounts.yaml"
+    seed_file.write_text("seeds:\n  - {handle: frank, origin: test}\n  - {handle: ghostacct, origin: test}\n")
+    config.load.cache_clear()
+    try:
+        cohort.build(conn, AS_OF, log=lambda *a: None)
+        rows = {r["username"]: r for r in measures_csv(config.COHORT / "cohort.csv")}
+        assert rows["frank"]["seeded"] == "test" and rows["frank"]["pre_release_posts"] == "0"
+        assert rows["alice"]["seeded"] == ""
+        ex = {r["username"]: r["reason"] for r in measures_csv(config.COHORT / "excluded.csv")}
+        assert "no such account" in ex["ghostacct"]
+    finally:
+        seed_file.unlink()
+        config.load.cache_clear()

@@ -11,6 +11,7 @@ USERS = {
     "3": dict(id="3", username="carol", name="Carol", description="newsletter", public_metrics={"followers_count": 8000}),
     "4": dict(id="4", username="dave", name="Dave", description="small", public_metrics={"followers_count": 800}),
     "5": dict(id="5", username="eve", name="Eve", description="Member of technical staff at @OpenAI", public_metrics={"followers_count": 90000}),
+    "7": dict(id="7", username="frank", name="🍓", description="a week of big plans ahead", public_metrics={"followers_count": 5000}),
     "6": dict(id="6", username="OpenAI", name="OpenAI", description="", public_metrics={"followers_count": 9000000}),
 }
 
@@ -43,6 +44,7 @@ POSTS = [
     P("401", "4", "2026-10-05T10:00:00.000Z", "GPT-9 soon", imps=100),
     P("402", "4", "2026-10-06T11:00:00.000Z", "GPT-9 imminent", imps=100),
     P("502", "5", "2026-10-07T11:00:00.000Z", "GPT-9 imminent", imps=100000),
+    P("701", "7", "2026-10-20T10:00:00.000Z", "something big this week 🍓", imps=7000),
     P("601", "6", "2026-10-05T12:00:00.000Z", "GPT-9 next week", imps=500000),
     P("501", "5", "2026-10-06T10:00:00.000Z", "GPT-9 next week", imps=100000),
 ]
@@ -92,7 +94,7 @@ def x_send(path, params):
         return 200, json.dumps(_payload(posts, with_users="author_id" in params.get("expansions", "") and "users" not in path)).encode()
     if path == "/tweets/counts/all":
         m = re.search(r"from:(\w+)", params["query"])
-        n = {"alice": 30, "bob": 15, "carol": 12, "dave": 40, "eve": 50}.get(m.group(1).lower(), 0) if m else 0
+        n = {"alice": 30, "bob": 15, "carol": 12, "dave": 40, "eve": 50, "frank": 20}.get(m.group(1).lower(), 0) if m else 0
         return 200, json.dumps({"data": [], "meta": {"total_tweet_count": n}}).encode()
     if path == "/users":
         ids = params["ids"].split(",")

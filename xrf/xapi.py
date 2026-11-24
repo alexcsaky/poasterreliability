@@ -42,6 +42,8 @@ def fields(kind: str = "full") -> dict:
     base = f"id,text,author_id,created_at,conversation_id,in_reply_to_user_id,lang,public_metrics,{refs},attachments,entities,{note}"
     if kind == "id":
         return {fkey: "id,created_at,author_id"}
+    if kind == "prelaunch":   # pre-launch sweeps: post fields only, no expansions billed (D-026)
+        return {fkey: base}
     if kind == "rank":   # impressions for ranking only: no expansions, so nothing extra is billed (D-024)
         return {fkey: f"id,author_id,created_at,public_metrics,{refs}"}
     out = {fkey: base, "media.fields": "media_key,type,url,preview_image_url,alt_text"}

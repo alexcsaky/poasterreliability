@@ -1,0 +1,25 @@
+# Seed accounts (D-026): known leak/forecast accounts added to the candidate pool by hand, because name-based
+# discovery misses accounts that hint rather than name models. Seeds still face the follower, staff and activity
+# rules and are ranked like everyone else; they are exempt only from the pre-release-post requirement.
+# origin: alex (named by Alex), claude-memory (Claude's knowledge, handles may be stale), data-bio (found in the
+# looked-up candidates by a bio describing leaks, rumours or insider reporting).
+seeds:
+  - {handle: iruletheworldmo, origin: alex, note: "'strawberry' account"}
+  - {handle: legit_api, origin: claude-memory}
+  - {handle: btibor91, origin: claude-memory}
+  - {handle: testingcatalog, origin: claude-memory}
+  - {handle: kimmonismus, origin: claude-memory}
+  - {handle: scaling01, origin: claude-memory}
+  - {handle: apples_jimmy, origin: claude-memory}
+  - {handle: chatgpt21, origin: claude-memory}
+  - {handle: flowersslop, origin: claude-memory}
+  - {handle: AiBattle_, origin: claude-memory}
+  - {handle: VraserX, origin: claude-memory}
+  - {handle: Presidentlin, origin: claude-memory}
+  - {handle: AndrewCurran_, origin: claude-memory}
+  - {handle: ChrisGPT, origin: data-bio, note: "AI Insider / Reporter"}
+  - {handle: koltregaskes, origin: data-bio, note: "leaks, rumours"}
+  - {handle: Lentils80, origin: data-bio, note: "Early AI news, leaks"}
+  - {handle: DanDr1s, origin: data-bio, note: "model leaks"}
+  - {handle: imjustnewatai, origin: data-bio}
+  - {handle: Angaisb_, origin: data-bio}

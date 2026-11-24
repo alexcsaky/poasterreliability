@@ -102,6 +102,38 @@ def sweep(conn: sqlite3.Connection, as_of: datetime, pages_per_release: int = 1,
     return n
 
 
+def prelaunch_sweep(conn, as_of: datetime, per_page: int = 100, log=print) -> int:
+    """Flagship releases only: search the 7 days before announcement, so launch-day volume cannot crowd out
+    earlier posts (D-026). Same names as `sweep`; no expansions."""
+    start, end = window(as_of)
+    n = 0
+    for r in sorted(load_releases(), key=lambda r: r.id):
+        t0 = r.dt("announced_at") or r.release_time
+        if r["tier"] != "flagship" or not t0 or not (start - timedelta(days=7) <= t0 <= end):
+            continue
+        names = xapi.ordered_terms({r["model"]} | {a.split("(")[0].strip() for a in (r["aliases"] or "").split(";") if a.strip()}
+                                   | {c.split("(")[0].strip() for c in (r["codenames"] or "").split(";") if c.strip()})[:6]
+        q = "(" + " OR ".join(f'"{x}"' for x in names if x) + ") -is:retweet -is:reply"
+        s, e = max(start, t0 - timedelta(days=7)), min(end, t0)
+        if s >= e:
+            continue
+        for raw in xapi.search_all(conn, q, _iso(s), _iso(e), budget=BUDGET, kind="prelaunch", max_results=per_page,
+                                   max_pages=1, sort_order="relevancy", tag=f"prelaunch:{r.id}"):
+            n += len(xparse.ingest(conn, raw, "discovery"))
+            _add_pool(conn, raw, f"prelaunch:{r.id}")
+        log(f"  prelaunch {r.id}: total posts so far {n}")
+    return n
+
+
+def seed_handles() -> dict[str, str]:
+    """lower-case handle -> origin, from config/seed_accounts.yaml (D-026)."""
+    try:
+        seeds = (config.load("seed_accounts") or {}).get("seeds") or []
+    except FileNotFoundError:
+        return {}
+    return {s["handle"].lstrip("@").lower(): s.get("origin", "") for s in seeds}
+
+
 def _add_pool(conn, raw, source: str) -> None:
     d = raw.json()
     inc = {t["id"]: t for t in ((d.get("includes") or {}).get("tweets") or (d.get("includes") or {}).get("posts") or [])}
@@ -158,8 +190,8 @@ def pre_release_posts(conn) -> dict[str, int]:
     t0 = {r.id: (r.dt("announced_at") or r.release_time) for r in load_releases()}
     out: dict[str, set] = {}
     for pj, path in conn.execute("SELECT params_json, body_path FROM raw_responses WHERE status BETWEEN 200 AND 299 "
-                                 "AND params_json LIKE '%\"_tag\": \"sweep:%'"):
-        rel = json.loads(pj).get("_tag", "")[len("sweep:"):]
+                                 "AND (params_json LIKE '%\"_tag\": \"sweep:%' OR params_json LIKE '%\"_tag\": \"prelaunch:%')"):
+        rel = json.loads(pj).get("_tag", "").split(":", 1)[1]
         if not t0.get(rel):
             continue
         for t in json.loads(rawstore.load_body(path)).get("data") or []:
@@ -175,12 +207,12 @@ def pre_release_posts(conn) -> dict[str, int]:
 def lookup_pool(conn, min_sightings: int = 2, max_users: int = 1500, eligible: set[str] | None = None,
                 log=print) -> int:
     rows = conn.execute("SELECT user_id, username, sources FROM candidates").fetchall()
-    if eligible is not None:   # D-025: only accounts that meet the pre-release requirement are looked up
-        rows = [r for r in rows if r["user_id"] in eligible]
+    if eligible is not None:   # D-025: only accounts that meet the pre-release requirement (or seeds) are looked up
+        rows = [r for r in rows if r["user_id"] in eligible or "seed" in r["sources"].split(";")]
     scored = []
     for r in rows:
         srcs = r["sources"].split(";")
-        forced = "grok" in srcs
+        forced = "grok" in srcs or "seed" in srcs
         if len(srcs) >= min_sightings or forced:
             scored.append((len(srcs) + (100 if forced else 0), r))
     scored.sort(key=lambda x: -x[0])
@@ -230,7 +262,7 @@ def staff_flag(desc: str) -> str | None:
     return None
 
 
-def apply_floor(conn, as_of: datetime, pre: dict[str, int] | None = None, log=print) -> tuple[list[dict], list[dict]]:
+def apply_floor(conn, as_of: datetime, pre: dict[str, int] | None = None, seeds: dict[str, str] | None = None, log=print) -> tuple[list[dict], list[dict]]:
     start, end = window(as_of)
     off = official_handles()
     pool_ids = {r[0] for r in conn.execute("SELECT user_id FROM candidates")}
@@ -248,7 +280,7 @@ def apply_floor(conn, as_of: datetime, pre: dict[str, int] | None = None, log=pr
         if sf:
             excluded.append({**base, "reason": sf})
             continue
-        if pre is not None and pre.get(u["user_id"], 0) < PRE_RELEASE_FLOOR:
+        if pre is not None and uname not in (seeds or {}) and pre.get(u["user_id"], 0) < PRE_RELEASE_FLOOR:
             excluded.append({**base, "reason": f"pre-release posts naming a model {pre.get(u['user_id'], 0)} < {PRE_RELEASE_FLOOR}"})
             continue
         if (u["followers"] or 0) < FOLLOWER_FLOOR:
@@ -262,7 +294,8 @@ def apply_floor(conn, as_of: datetime, pre: dict[str, int] | None = None, log=pr
         if n < POST_FLOOR:
             excluded.append({**base, "reason": f"release-related original posts in 90 days {n} < {POST_FLOOR}"})
         else:
-            passed.append({**u, "release_posts_90d": n, "pre_release_posts": (pre or {}).get(u["user_id"])})
+            passed.append({**u, "release_posts_90d": n, "pre_release_posts": (pre or {}).get(u["user_id"], 0),
+                           "seeded": (seeds or {}).get((u["username"] or "").lower(), "")})
     log(f"  floor: {len(passed)} pass, {len(excluded)} excluded")
     return passed, excluded
 
@@ -293,7 +326,7 @@ def rank(conn, passed: list[dict], as_of: datetime, impression_sample: int = 20,
     return out
 
 
-COHORT_COLUMNS = ["rank", "username", "user_id", "followers", "release_posts_90d", "pre_release_posts", "median_impressions",
+COHORT_COLUMNS = ["rank", "username", "user_id", "followers", "release_posts_90d", "pre_release_posts", "seeded", "median_impressions",
                   "impression_posts", "rank_basis", "sources", "pilot", "pilot_third"]
 
 
@@ -318,12 +351,21 @@ def build(conn, as_of: datetime | None = None, top_n: int = 100, log=print) -> d
     conn.commit()
     log("Stage 2: sweeps")
     sweep(conn, as_of, log=log)
+    log("Stage 2: pre-launch sweeps (flagship)")
+    prelaunch_sweep(conn, as_of, log=log)
     grok_discover(conn, as_of, log=log)
+    seeds = seed_handles()
+    for h in sorted(seeds):
+        _pool_add(conn, None, h, "seed")
+    conn.commit()
     pre = pre_release_posts(conn)
     log(f"  pre-release: {sum(n >= PRE_RELEASE_FLOOR for n in pre.values())} accounts with >= {PRE_RELEASE_FLOOR}")
     log("Stage 2: lookups")
     lookup_pool(conn, eligible={a for a, n in pre.items() if n >= PRE_RELEASE_FLOOR}, log=log)
-    passed, excluded = apply_floor(conn, as_of, pre=pre, log=log)
+    passed, excluded = apply_floor(conn, as_of, pre=pre, seeds=seeds, log=log)
+    found = {(u["username"] or "").lower() for u in conn.execute("SELECT username FROM users")}
+    for h in sorted(set(seeds) - found):
+        excluded.append({"username": h, "user_id": "", "followers": "", "reason": "seed: no such account on X"})
     ranked = rank(conn, passed, as_of, log=log)[:top_n]
     srcs = {r["user_id"]: r["sources"] for r in conn.execute("SELECT user_id, sources FROM candidates")}
     for r in ranked:

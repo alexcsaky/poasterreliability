@@ -337,3 +337,22 @@ ten matching posts in 90 days is about one a week, and content-farm and sponsore
   run; a test checks a second build is identical and makes no calls.
 - **Cap:** discovery raised from 75 to 100 USD by Alex (in chat, 2026-11-24). Other caps unchanged.
 - Expect fewer than 100 accounts (the pre-release requirement leaves 127 candidates before other filters).
+
+## D-026 (2026-11-24) Seed accounts and flagship pre-launch sweeps
+
+The 67-account cohort under D-025 left out the best-known leak and early-news accounts. @iruletheworldmo
+("strawberry", 117,686 followers, 416 original posts and 38 strict-rule release posts in the window) was never
+discovered: name-based sweeps miss accounts that hint instead of naming models. @legit_api, @btibor91,
+@kimmonismus, @scaling01 and @testingcatalog scored 0-1 pre-release posts because each sweep kept 100 posts over
+a window from 7 days before to 2 days after launch, so launch-day volume crowded out earlier posts. Alex decided:
+- **Flagship pre-launch sweeps:** for each flagship release in the window, search only the 7 days before
+  announcement (same names, 100 most relevant posts, no expansions). These posts also count for the pre-release
+  requirement and add their authors to the pool.
+- **Seed accounts** (`config/seed_accounts.yaml`): known leak/forecast accounts join the pool by hand, each with its
+  origin (alex, claude-memory, data-bio). Seeds face the follower, staff and activity rules and are ranked like
+  everyone else, but are exempt from the pre-release requirement, which cannot see hint-style posting. The cohort
+  file marks seeded accounts; the report must say how many came from seeding. Seeds with no X account are listed
+  in `excluded.csv`. This trades some "discovered, not hand-picked" purity for coverage of known forecasters;
+  the pilot's resolved accuracy, not the seed list, decides how they score.
+- Claude's additions came from memory (handles may be stale) and from looked-up candidates whose bios describe
+  leaks, rumours or insider reporting. General AI-news and commentary accounts were not seeded.
