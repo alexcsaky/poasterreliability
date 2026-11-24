@@ -2,5 +2,5 @@
 # would take a budget past its cap. Change only with a dated entry in docs/DECISIONS.md.
 caps_usd:
   x_reads: 150      # Stage 3 collection, Stage 9 daily pulls and deletion checks
-  discovery: 75     # Stage 2 cohort discovery: X keyword sweeps, user lookups, candidate checks, Grok X search
+  discovery: 100    # raised from 75 by Alex on 2026-11-24 (D-025). Stage 2 cohort discovery: X keyword sweeps, user lookups, candidate checks, Grok X search
   model_calls: 75   # LLM calls: pass 1, pass 2, alias matching, audit re-run

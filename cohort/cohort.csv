@@ -1,0 +1,68 @@
+rank,username,user_id,followers,release_posts_90d,pre_release_posts,median_impressions,impression_posts,rank_basis,sources,pilot,pilot_third
+1,ArtificialAnlys,1743487864934162432,183497,156,2,70341,13,median_impressions,quotedx28; sweep:alibaba-qwen-audio-3-1-ttsx2; sweep:google_deepmind-gemini-3-8-flash-lite-ttsx2; sweep:google_deepmind-gemini-3-8-flash-ttsx2; mentionedx2,1,top
+2,lyraxana,2059551805588086784,19869,31,5,40954,19,median_impressions,quotedx12; mentionedx2; sweep:google_deepmind-gemini-4-hydrogenx2; sweep:anthropic-claude-sonnet-5-5x1; sweep:google_deepmind-gemini-3-8-flashx1,,
+3,pankajkumar_dev,1820087846025519104,17697,134,4,32521,15,median_impressions,sweep:google_deepmind-gemini-3-8-flashx3; quotedx1; sweep:google_deepmind-gemini-4-hydrogenx1; sweep:google_deepmind-gemini-omni-1-1-flashx1; sweep:openai-gpt-6-astrax1,,
+4,chetaslua,1870923516675289088,46671,77,2,30244.5,16,median_impressions,sweep:anthropic-claude-fable-5-1x1; sweep:google_deepmind-gemini-4-neonx1; sweep:meta-muse-wonderx1; sweep:openai-gpt-6-1-terrax1; quotedx1,,
+5,TokenGremlin,1499460382158725120,23054,449,3,21169,13,median_impressions,quotedx3; sweep:genericx2; sweep:openai-gpt-6-2-astrax1; mentionedx1; sweep:openai-gpt-6-astrax1,,
+6,NFT_Chen,1429221486032678914,30486,137,7,14775.5,20,median_impressions,quotedx10; sweep:deepseek-deepseek-v4-1-prox3; sweep:deepseek-deepseek-v4-1-flash-1017x2; sweep:alibaba-qwen-image-2-1-turbox1; sweep:anthropic-claude-fable-5-1x1,,
+7,LuminaBench,1058501423653101574,17502,185,10,10563.0,12,median_impressions,quotedx35; sweep:google_deepmind-gemini-3-8-flash-ttsx2; sweep:google_deepmind-gemini-3-8-livex2; sweep:openai-gpt-6-1-terrax2; sweep:openai-gpt-6-astrax2,1,top
+8,teortaxesTex,192201556,80590,103,2,7787,17,median_impressions,sweep:deepseek-deepseek-v4-1-flash-1017x1; quotedx1; sweep:deepseek-deepseek-v4-1-prox1,,
+9,Mr_Salio,2026660978046480384,12472,241,12,7338,11,median_impressions,quotedx14; sweep:google_deepmind-gemini-3-8-flashx4; sweep:openai-gpt-6-1-terrax3; sweep:openai-gpt-6-astrax3; sweep:openai-gpt-6-rosalindx3,,
+10,theaidesk_,1653426680357060609,2425,70,3,6853,13,median_impressions,sweep:openai-gpt-6-rosalindx2; sweep:openai-gpt-image-2-6-flarex2; sweep:openai-gpt-image-2-6-sunburstx2; sweep:google_deepmind-gemini-4-carbonx1; sweep:google_deepmind-gemini-decision-1x1,,
+11,notiyda,990697855,2139,23,4,5586.5,20,median_impressions,sweep:anthropic-claude-fable-5-1x4; sweep:openai-gpt-6-astrax1; quotedx1,,
+12,rezoundous,2011253849412235265,12150,79,5,5507.5,14,median_impressions,sweep:openai-gpt-6-2-solx4; sweep:openai-gpt-6-2-astrax1; quotedx1,,
+13,mark_k,8721292,64669,168,2,5250.0,14,median_impressions,sweep:anthropic-claude-opus-5-5x1; sweep:openai-gpt-6-1-solx1; sweep:openai-gpt-live-1-1x1; sweep:openai-gpt-live-1-1-quipx1,,
+14,marcthecreatorr,1530248240821592064,3292,63,5,5071,17,median_impressions,sweep:anthropic-claude-sonnet-5-5x2; quotedx2; sweep:google_deepmind-gemini-4-hydrogenx2; sweep:google_deepmind-gemini-4-carbonx1; sweep:google_deepmind-gemini-4-neonx1,,
+15,StatsWire,1326885552793247751,4171,401,18,4202.5,20,median_impressions,quotedx10; sweep:google_deepmind-gemini-4-hydrogenx7; sweep:google_deepmind-gemini-4-neonx3; sweep:openai-gpt-6-1-terrax3; sweep:google_deepmind-gemini-3-5-transcribex2,,
+16,TekonBurns,1864897473954877440,4887,115,2,3993,11,median_impressions,sweep:google_deepmind-gemini-4-hydrogenx1; sweep:openai-gpt-6-2-astrax1; sweep:openai-gpt-image-2-6-flarex1,1,top
+17,Ananth7e,2062854671828713472,4823,240,5,3940.5,10,median_impressions,mentionedx2; sweep:anthropic-claude-fable-5-1x1; quotedx1; sweep:anthropic-claude-opus-5-5x1; sweep:google_deepmind-gemini-3-8-flashx1,1,top
+18,ItsmeAjayKV,776101768392355840,11482,251,13,3820.0,14,median_impressions,sweep:alibaba-qwen4-maxx10; quotedx3; sweep:deepseek-deepseek-v4-1-flashx2; sweep:deepseek-deepseek-v4-1-flash-1017x2; sweep:alibaba-qwen-image-2-1x1,,
+19,leo114119,1647958531461480448,11581,81,18,3470.5,6,median_impressions,sweep:google_deepmind-gemini-4-hydrogenx11; sweep:openai-gpt-6-1-terrax4; sweep:deepseek-deepseek-v4-1-flash-1017x2; quotedx2; sweep:meta-muse-wonderx2,,
+20,laopai1990,1781922512735244288,4766,12,4,3378,9,median_impressions,sweep:openai-gpt-6-2-astrax2; sweep:openai-gpt-6-2-solx2; sweep:google_deepmind-gemini-4-neonx1; quotedx1,1,top
+21,testerlabor,1769074421438803968,14741,59,3,3187,19,median_impressions,sweep:xai-grok-4-8x3; sweep:xai-grok-4-7x2,,
+22,EngMoElgaraihy,1759922300671975424,64797,36,2,3006.5,16,median_impressions,sweep:anthropic-claude-sonnet-5-5x2; sweep:google_deepmind-gemini-3-8-flash-lite-ttsx1; sweep:google_deepmind-gemini-4-argonx1; sweep:meta-muse-spark-1-3x1; sweep:mistral-voxtral-3x1,,
+23,vepsi__,1490325079993073665,1017,45,3,2522.0,20,median_impressions,sweep:google_deepmind-gemini-3-8-flashx3,,
+24,0x0SojalSec,1445347022555340805,66925,278,9,2497.0,12,median_impressions,sweep:openai-gpt-6-astrax4; sweep:anthropic-claude-opus-5-5x2; sweep:google_deepmind-gemini-3-8-flashx2; sweep:alibaba-qwen-image-2-1-turbox1; sweep:anthropic-claude-sonnet-5-5x1,1,middle
+25,xiax0603,2073117451269877760,7038,49,10,2476,19,median_impressions,quotedx10; sweep:openai-gpt-6-2-astrax5; sweep:openai-gpt-6-2-solx3; sweep:google_deepmind-gemini-4-hydrogenx1; sweep:google_deepmind-gemini-4-neonx1,,
+26,aitrackerbot,1769852186874306560,4666,109,6,2465,15,median_impressions,quotedx7; sweep:mistral-voxtral-3x3; sweep:google_deepmind-gemini-4-neonx2; sweep:alibaba-qwen-audio-3-1-realtimex1; sweep:alibaba-qwen-image-2-1-turbox1,,
+27,Its_lakshya_ai,1979821722242072576,3328,96,2,2399,19,median_impressions,sweep:google_deepmind-gemini-3-8-flashx1; sweep:google_deepmind-gemini-4-hydrogenx1,,
+28,SadAlbert10,1389178840388313092,2231,82,3,2061,15,median_impressions,sweep:anthropic-claude-haiku-5-5x1; quotedx1; sweep:google_deepmind-gemini-3-5-transcribex1; sweep:openai-gpt-6-1-solx1; sweep:openai-gpt-6-1-terrax1,,
+29,ai_funss,768746623627366400,5296,24,3,1984.0,20,median_impressions,sweep:alibaba-qwen4-maxx1; sweep:google_deepmind-gemini-4-carbonx1; sweep:openai-gpt-6-2-astrax1; sweep:openai-gpt-6-2-solx1; sweep:openai-gpt-6-lunax1,,
+30,JamesDa55049936,1643246417870491654,6491,24,2,1966,19,median_impressions,sweep:openai-gpt-6-2-astrax1; sweep:openai-gpt-6-2-solx1,,
+31,Mr_nexp,1677018285617950723,15327,126,4,1918,11,median_impressions,sweep:anthropic-claude-sonnet-5-5x1; sweep:google_deepmind-gemini-4-neonx1; sweep:google_deepmind-gemini-decision-1x1; sweep:openai-gpt-6-1-solx1; sweep:openai-gpt-6-1-terrax1,1,middle
+32,mrfanduu,1858428496814526464,1190,24,3,1867.5,18,median_impressions,quotedx2; sweep:alibaba-qwen3-8-flashx1; sweep:anthropic-claude-opus-5-5x1; sweep:google_deepmind-gemini-3-8-flash-ttsx1; sweep:google_deepmind-gemini-3-8-livex1,,
+33,hakmgpt,1840275310333267968,1746,64,3,1859.0,20,median_impressions,quotedx3; sweep:openai-gpt-6-astrax2; sweep:google_deepmind-gemini-3-8-flashx1,,
+34,Haleeeemahh,1683187991353647107,6549,198,4,1820,13,median_impressions,quotedx5; sweep:google_deepmind-gemini-4-carbonx5; sweep:google_deepmind-gemini-3-8-flash-lite-ttsx1; sweep:genericx1,1,middle
+35,HarshithLucky3,1374854891294711809,4856,141,11,1786,17,median_impressions,quotedx15; sweep:openai-gpt-6-astrax7; sweep:google_deepmind-gemini-omni-1-1-flashx5; sweep:xai-grok-4-7x5; sweep:google_deepmind-gemini-3-8-flash-ttsx3,,
+36,QwenAIFans,1817798430007468032,9561,42,2,1773,19,median_impressions,sweep:alibaba-qwen4-maxx1; sweep:deepseek-deepseek-v4-1-flash-1017x1,,
+37,MLB_Connection,995612364232798209,3356,78,6,1713,19,median_impressions,sweep:google_deepmind-gemini-4-hydrogenx6; sweep:google_deepmind-gemini-decision-1x2; sweep:anthropic-claude-mythos-5-2x1; sweep:google_deepmind-gemini-3-8-flashx1; quotedx1,1,middle
+38,insanekrishnaa,1858811140333088768,11001,108,7,1703,15,median_impressions,sweep:openai-gpt-6-2-solx4; sweep:openai-gpt-6-2-astrax3; sweep:openai-gpt-6-1-terrax1; quotedx1,,
+39,buildwithrajath,2070186740552445952,1995,587,5,1656.0,20,median_impressions,sweep:genericx5; sweep:alibaba-qwen3-8-flashx1; sweep:anthropic-claude-fable-5-1x1; sweep:anthropic-claude-mythos-5-2x1; sweep:anthropic-claude-sonnet-5-5x1,,
+40,saloniiio,2067202550294892544,3834,16,2,1650.5,20,median_impressions,sweep:google_deepmind-gemini-4-carbonx1; sweep:google_deepmind-gemini-4-hydrogenx1,,
+41,Kevin_Logan,1553888707,2182,44,2,1649.5,20,median_impressions,sweep:xai-grok-4-8x3,1,middle
+42,cheatyyyy,1493596503260205067,5285,106,2,1540,19,median_impressions,quotedx5; sweep:meta-muse-emberx3; sweep:openai-gpt-image-2-5-flarex2; sweep:anthropic-claude-fable-5-1x1; sweep:google_deepmind-gemini-decision-1x1,,
+43,Smlay_ero,2010957547424137218,8071,165,4,1533.0,16,median_impressions,sweep:moonshot-kimi-k3-1-prox2; sweep:deepseek-deepseek-v4-1-flash-1017x1; sweep:google_deepmind-gemini-4-hydrogenx1; sweep:openai-gpt-6-2-solx1,,
+44,AI_Screening,2093004389799858176,1741,131,2,1397,11,median_impressions,quotedx2; sweep:anthropic-claude-fable-5-1x1; sweep:anthropic-claude-mythos-5-1x1; sweep:google_deepmind-gemini-3-8-flashx1; sweep:google_deepmind-gemini-4-hydrogenx1,,
+45,TimJayas,1956954573614313472,5693,330,6,1285.5,12,median_impressions,quotedx4; sweep:openai-gpt-6-2-astrax2; sweep:alibaba-qwen3-8-flashx1; sweep:anthropic-claude-fable-5-1x1; sweep:google_deepmind-gemini-4-carbonx1,,
+46,LDT0545,2055365184907063296,2297,57,3,1244,13,median_impressions,sweep:openai-gpt-6-2-solx3; sweep:google_deepmind-gemini-4-neonx1; sweep:openai-gpt-6-2-astrax1; quotedx1,1,bottom
+47,astropol0,1780189133249609728,3663,144,2,1191.5,12,median_impressions,sweep:anthropic-claude-fable-5-1x1; sweep:google_deepmind-gemini-4-hydrogenx1; sweep:google_deepmind-gemini-decision-1x1,,
+48,adityaa_behera,1709245282553053185,1625,204,11,1173.5,20,median_impressions,quotedx4; sweep:openai-gpt-6-1-terrax4; sweep:google_deepmind-gemini-4-neonx3; sweep:meta-muse-wonderx3; sweep:google_deepmind-gemini-4-carbonx1,,
+49,karanC_12,1589682529501556737,2501,133,6,932,19,median_impressions,sweep:openai-gpt-6-astrax4; sweep:zhipu-glm-5-3-flashx2; sweep:alibaba-qwen3-8-flashx1; sweep:alibaba-qwen3-8-omni-flashx1; sweep:anthropic-claude-fable-5-1x1,,
+50,thisisdimm,588620077,2572,26,3,931.5,20,median_impressions,sweep:google_deepmind-gemini-3-8-flashx4; sweep:alibaba-qwen3-8-flashx1; sweep:genericx1; quotedx1,1,bottom
+51,0xdominus,2959948390,1377,87,2,845,17,median_impressions,sweep:deepseek-deepseek-v4-1-flash-1017x1; quotedx1; sweep:google_deepmind-gemini-3-8-flashx1; sweep:google_deepmind-gemini-4-hydrogenx1,,
+52,ParamSiddh,1632261584008667138,10112,39,4,842.5,18,median_impressions,sweep:openai-gpt-6-2-solx2; sweep:google_deepmind-gemini-4-neonx1; sweep:openai-gpt-6-2-astrax1,,
+53,aapakari,102521598,13271,83,2,830.0,16,median_impressions,sweep:xai-grok-4-8x2; quotedx1,1,bottom
+54,alexgetmancom,2019541412149161984,2851,89,3,823,17,median_impressions,sweep:openai-gpt-6-solx2; sweep:openai-gpt-6-lunax1; sweep:zhipu-glm-5-3-flashx1; quotedx1,,
+55,aiZttt__,2000581649906667521,3542,12,2,781,11,median_impressions,sweep:meta-muse-emberx1; sweep:moonshot-kimi-k3-1-prox1; sweep:xai-grok-4-8x1,,
+56,R2Cdev_,1743274796652077056,1053,42,3,735.5,20,median_impressions,sweep:openai-gpt-image-2-5-sunburstx3; sweep:anthropic-claude-haiku-5-5x2; sweep:anthropic-claude-fable-5-1x1; sweep:anthropic-claude-opus-5-5x1; sweep:google_deepmind-gemini-4-hydrogenx1,,
+57,_jayyy18_13k,2042826624488349696,1236,215,3,732,13,median_impressions,sweep:google_deepmind-gemini-4-argonx1; sweep:google_deepmind-gemini-4-neonx1; sweep:openai-gpt-6-1-solx1; sweep:openai-gpt-6-astrax1; sweep:xai-grok-4-8x1,,
+58,glitch_catAI,1946527890910412800,5662,161,6,716.5,16,median_impressions,sweep:openai-gpt-6-1-terrax2; sweep:openai-gpt-6-astrax2; sweep:anthropic-claude-fable-5-1x1; sweep:anthropic-claude-sonnet-5-5x1; sweep:google_deepmind-gemini-4-argonx1,,
+59,sonuv_dev,1579215112854016001,1418,146,4,548,11,median_impressions,sweep:google_deepmind-gemini-4-hydrogenx4; quotedx4; sweep:anthropic-claude-fable-5-2x1,,
+60,OGKAIM,2063869061222805504,7097,13,3,300.5,18,median_impressions,sweep:openai-gpt-6-2-astrax2; sweep:alibaba-qwen4-maxx1; sweep:meta-muse-wonder-fullx1,,
+61,MRehan_5,1917818664801206272,1242,28,2,299,19,median_impressions,sweep:xai-grok-4-7x2,,
+62,Palak3312,2023273436437757952,4601,24,3,269.0,16,median_impressions,sweep:google_deepmind-gemini-4-carbonx1; sweep:openai-gpt-6-2-astrax1; sweep:openai-gpt-6-2-solx1,,
+63,lumeroute,2061068428430168065,12996,15,2,214,15,median_impressions,sweep:openai-gpt-6-2-solx2,,
+64,arnaudmercier,27454144,41114,1680,3,185.5,20,median_impressions,sweep:mistral-mistral-large-4x7; sweep:anthropic-claude-fable-5-1x3; sweep:genericx1,1,bottom
+65,xjaxax,1310115771184373760,1263,22,2,157.5,16,median_impressions,sweep:openai-gpt-6-2-solx2,,
+66,JayaNayak21,2074892055495704582,1356,163,2,111.0,20,median_impressions,sweep:zhipu-glm-5-3-flashx2; sweep:anthropic-claude-mythos-5-1x1; sweep:anthropic-claude-opus-5-5x1; sweep:google_deepmind-gemini-3-8-flashx1; sweep:meta-muse-spark-1-3x1,1,bottom
+67,BilalGreyrat,2079586746908745728,3566,29,4,29,19,median_impressions,sweep:openai-gpt-6-2-astrax2; sweep:anthropic-claude-haiku-5-5x1; sweep:openai-gpt-6-2-solx1,,

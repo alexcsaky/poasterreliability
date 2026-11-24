@@ -31,7 +31,8 @@ from .ledger import load_releases, write_csv
 BUDGET = "discovery"
 WINDOW_DAYS = 90
 SETTLE_DAYS = 3
-FOLLOWER_FLOOR = 5000
+FOLLOWER_FLOOR = 1000      # D-025 (was 5000)
+PRE_RELEASE_FLOOR = 2      # D-025: posts naming a ledger model before its announcement
 POST_FLOOR = 10
 
 # Release-related filter used for cohort counting and ranking (deterministic keyword rule, D-010).
@@ -44,6 +45,18 @@ RELEASE_TERMS = ["release", "released", "releasing", "launch", "launched", "laun
                  "leaked", "rumor", "rumour", "\"next week\"", "\"this week\"", "today", "tomorrow", "imminent",
                  "codename", "preview", "benchmark", "pricing", "\"context window\"", "available", "rolling",
                  "out now", "new model"]
+
+
+# Stricter rule for the activity floor (D-025): generic words (today, available, soon, ship, drop, ...) removed.
+STRICT_TERMS = ["release", "released", "releasing", "launch", "launched", "launching", "leak", "leaked", "rumor",
+                "rumour", "codename", "\"next week\"", "\"this week\"", "\"coming soon\"", "imminent", "preview",
+                "benchmark", "benchmarks", "pricing", "\"context window\"", "\"new model\"", "\"out now\"",
+                "announce", "announced", "weights"]
+
+
+def strict_query(prefix: str = "") -> str:
+    q = f"{prefix} ({' OR '.join(FAMILY_TERMS)}) ({' OR '.join(STRICT_TERMS)}) -is:retweet -is:reply"
+    return re.sub(r"\s+", " ", q).strip()
 
 
 def release_query(prefix: str = "") -> str:
@@ -134,10 +147,36 @@ def grok_discover(conn, as_of: datetime, log=print) -> list[str]:
     return names
 
 
+# ---- 2c. pre-release posts (free: from stored sweep results) --------------------------------------
+
+def pre_release_posts(conn) -> dict[str, int]:
+    """Original or quote posts per author, from the stored per-release sweep responses, that name a ledger model
+    and were posted before that release's announcement (D-025). Read from the raw responses, not the posts table,
+    whose raw_id points at the last response that contained a post. Sweeps keep 100 posts per release from 7
+    days before, so this undercounts."""
+    from . import rawstore
+    t0 = {r.id: (r.dt("announced_at") or r.release_time) for r in load_releases()}
+    out: dict[str, set] = {}
+    for pj, path in conn.execute("SELECT params_json, body_path FROM raw_responses WHERE status BETWEEN 200 AND 299 "
+                                 "AND params_json LIKE '%\"_tag\": \"sweep:%'"):
+        rel = json.loads(pj).get("_tag", "")[len("sweep:"):]
+        if not t0.get(rel):
+            continue
+        for t in json.loads(rawstore.load_body(path)).get("data") or []:
+            if xparse.post_kind(t) not in ("original", "quote") or not t.get("author_id"):
+                continue
+            if datetime.fromisoformat(t["created_at"].replace("Z", "+00:00")) < t0[rel]:
+                out.setdefault(t["author_id"], set()).add(t["id"])
+    return {a: len(v) for a, v in out.items()}
+
+
 # ---- 3. lookup ----------------------------------------------------------------------------------
 
-def lookup_pool(conn, min_sightings: int = 2, max_users: int = 1500, log=print) -> int:
+def lookup_pool(conn, min_sightings: int = 2, max_users: int = 1500, eligible: set[str] | None = None,
+                log=print) -> int:
     rows = conn.execute("SELECT user_id, username, sources FROM candidates").fetchall()
+    if eligible is not None:   # D-025: only accounts that meet the pre-release requirement are looked up
+        rows = [r for r in rows if r["user_id"] in eligible]
     scored = []
     for r in rows:
         srcs = r["sources"].split(";")
@@ -191,7 +230,7 @@ def staff_flag(desc: str) -> str | None:
     return None
 
 
-def apply_floor(conn, as_of: datetime, log=print) -> tuple[list[dict], list[dict]]:
+def apply_floor(conn, as_of: datetime, pre: dict[str, int] | None = None, log=print) -> tuple[list[dict], list[dict]]:
     start, end = window(as_of)
     off = official_handles()
     pool_ids = {r[0] for r in conn.execute("SELECT user_id FROM candidates")}
@@ -209,18 +248,21 @@ def apply_floor(conn, as_of: datetime, log=print) -> tuple[list[dict], list[dict
         if sf:
             excluded.append({**base, "reason": sf})
             continue
+        if pre is not None and pre.get(u["user_id"], 0) < PRE_RELEASE_FLOOR:
+            excluded.append({**base, "reason": f"pre-release posts naming a model {pre.get(u['user_id'], 0)} < {PRE_RELEASE_FLOOR}"})
+            continue
         if (u["followers"] or 0) < FOLLOWER_FLOOR:
             excluded.append({**base, "reason": f"followers {u['followers']} < {FOLLOWER_FLOOR}"})
             continue
         keep.append(dict(u))
     passed = []
     for u in sorted(keep, key=lambda u: -(u["followers"] or 0)):
-        n = xapi.counts_all(conn, release_query(f"from:{u['username']}"), _iso(start), _iso(end), budget=BUDGET)
+        n = xapi.counts_all(conn, strict_query(f"from:{u['username']}"), _iso(start), _iso(end), budget=BUDGET)
         base = {"user_id": u["user_id"], "username": u["username"], "followers": u["followers"]}
         if n < POST_FLOOR:
             excluded.append({**base, "reason": f"release-related original posts in 90 days {n} < {POST_FLOOR}"})
         else:
-            passed.append({**u, "release_posts_90d": n})
+            passed.append({**u, "release_posts_90d": n, "pre_release_posts": (pre or {}).get(u["user_id"])})
     log(f"  floor: {len(passed)} pass, {len(excluded)} excluded")
     return passed, excluded
 
@@ -251,7 +293,7 @@ def rank(conn, passed: list[dict], as_of: datetime, impression_sample: int = 20,
     return out
 
 
-COHORT_COLUMNS = ["rank", "username", "user_id", "followers", "release_posts_90d", "median_impressions",
+COHORT_COLUMNS = ["rank", "username", "user_id", "followers", "release_posts_90d", "pre_release_posts", "median_impressions",
                   "impression_posts", "rank_basis", "sources", "pilot", "pilot_third"]
 
 
@@ -271,12 +313,17 @@ def pilot_subset(ranked: list[dict], n_per_third: int = 5, seed: int = 20261119)
 
 def build(conn, as_of: datetime | None = None, top_n: int = 100, log=print) -> dict:
     as_of = as_of or datetime.now(timezone.utc)
+    # The pool is rebuilt from stored responses on every run, so re-runs do not inflate sightings (D-025).
+    conn.execute("DELETE FROM candidates")
+    conn.commit()
     log("Stage 2: sweeps")
     sweep(conn, as_of, log=log)
     grok_discover(conn, as_of, log=log)
+    pre = pre_release_posts(conn)
+    log(f"  pre-release: {sum(n >= PRE_RELEASE_FLOOR for n in pre.values())} accounts with >= {PRE_RELEASE_FLOOR}")
     log("Stage 2: lookups")
-    lookup_pool(conn, log=log)
-    passed, excluded = apply_floor(conn, as_of, log=log)
+    lookup_pool(conn, eligible={a for a, n in pre.items() if n >= PRE_RELEASE_FLOOR}, log=log)
+    passed, excluded = apply_floor(conn, as_of, pre=pre, log=log)
     ranked = rank(conn, passed, as_of, log=log)[:top_n]
     srcs = {r["user_id"]: r["sources"] for r in conn.execute("SELECT user_id, sources FROM candidates")}
     for r in ranked:

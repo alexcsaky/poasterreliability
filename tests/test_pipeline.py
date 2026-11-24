@@ -34,6 +34,17 @@ def test_cohort(conn):
     state.set("pilot_accounts", out["pilot"])
 
 
+def test_cohort_rerun_is_identical(conn):
+    """Re-runs replay stored responses; the pool must not accumulate sightings (D-025)."""
+    pool = sorted(map(tuple, conn.execute("SELECT user_id, sources FROM candidates")))
+    before = (config.COHORT / "cohort.csv").read_text()
+    n = fw.calls["x"]
+    cohort.build(conn, AS_OF, log=lambda *a: None)
+    assert fw.calls["x"] == n
+    assert sorted(map(tuple, conn.execute("SELECT user_id, sources FROM candidates"))) == pool
+    assert (config.COHORT / "cohort.csv").read_text() == before
+
+
 def measures_csv(p):
     import csv
     with open(p) as f:
@@ -52,7 +63,7 @@ def test_collect_excludes_replies(conn):
 def test_extract_blind_and_validated(conn):
     ids = ["1", "2", "3"]
     out = extract.run_all(conn, ids, log=lambda *a: None)
-    assert out["posts"] == 9 and out["release_related"] == 8
+    assert out["posts"] == 13 and out["release_related"] == 12   # incl. 4 pre-release posts added for D-025
     hype = conn.execute("SELECT uncheckable_reason FROM extractions WHERE post_id='202'").fetchone()[0]
     assert hype == "pure_hype"
     # the extractor input never contains ledger information
@@ -91,7 +102,7 @@ def test_measures_and_report(conn):
     a = {r["account"]: r for r in m["accounts"]}
     assert a["alice"]["timing_n"] == 2 and a["alice"]["timing_correct"] == 1
     assert a["alice"]["pre_n"] == 2
-    assert a["bob"]["vagueness_rate"] == pytest.approx(2 / 3)
+    assert a["bob"]["vagueness_rate"] == pytest.approx(3 / 4)
     assert a["carol"]["relay_share"] == pytest.approx(0.5)
     assert a["alice"]["timing_skill"] is not None
     audit.make_sample(conn, n=200)

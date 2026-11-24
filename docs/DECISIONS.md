@@ -316,3 +316,24 @@ what was spent before the refusal. Before any ranking call was made, the run was
 fetch 20 recent release posts per account with `public_metrics` and referenced-post types only (no expansions;
 worst case 0.10 USD). Median impressions over 20 posts instead of 30 is coarser but adequate for a reach ranking.
 The cap was not changed.
+
+## D-025 (2026-11-24) Cohort bar tightened; discovery cap raised to 100 USD
+
+Looking at what passed the old bar (254 accounts), Alex and Claude agreed it measured "posts about AI a lot",
+not "posts about model releases": the keyword rule accepted generic words (today, available, soon, ship, drop),
+ten matching posts in 90 days is about one a week, and content-farm and sponsored accounts passed. Alex decided:
+- **Pre-release requirement:** at least 2 original or quote posts naming a ledger model (or its alias or codename)
+  before that release's announcement, counted from the stored per-release sweeps (`cohort.pre_release_posts`). Free,
+  but it undercounts: each sweep kept the 100 most relevant posts from 7 days before announcement. Only accounts
+  meeting it are looked up.
+- **Follower floor 1,000** (was 5,000). The pre-release requirement now does the quality filtering.
+- **Stricter activity rule** (`STRICT_TERMS`): family term plus a release or forecast word, generic words removed.
+  The floor stays at 10 posts in 90 days. Naming each ledger model in the count query is not possible within
+  X's 1,024-character full-archive query limit.
+- Ranking still uses the broader `release_query` sample (it measures reach, not content), so the 101 ranking
+  samples already paid for are reused.
+- **Bug fixed:** the candidate pool appended sightings on every run, so after several replays every account looked
+  seen 5-10 times and the two-sighting filter did nothing. The pool is now rebuilt from stored responses on each
+  run; a test checks a second build is identical and makes no calls.
+- **Cap:** discovery raised from 75 to 100 USD by Alex (in chat, 2026-11-24). Other caps unchanged.
+- Expect fewer than 100 accounts (the pre-release requirement leaves 127 candidates before other filters).

@@ -1,6 +1,6 @@
 # Status
 
-_Last updated 2026-11-23._
+_Last updated 2026-11-24._
 
 ## Current facts
 
@@ -17,36 +17,34 @@ _Last updated 2026-11-23._
 - **Stages 2–9 are built and tested** (`xrf/`, `python -m xrf -h`). 18 offline tests run the whole pipeline on a
   fake X/LLM world, including cap refusal, span validation, the daily job with hashes and commits, deletion
   checks, and an offline `rebuild` that reproduces the report byte for byte with no calls and no spend.
-- **First live run (2026-11-21) halted in Stage 2** (D-022). The X account's prepaid credit ran out (HTTP 402
-  `credits-depleted`) after the per-release discovery sweeps, and `ANTHROPIC_API_KEY` was empty. **No cohort exists
-  yet (STOP 1 not reached), no posts collected, no claims, verdicts or report figures.**
-- Done live: `probe` (`tweet.fields` confirmed, `field_style: tweet` kept); `signals-x` (310 official pre-release
-  posts on X, `ledger/signals_x.csv`); cohort sweeps for every release in the window (5,255 discovery posts,
-  3,476 candidate accounts, 134 stored pages). Not done: Grok discovery, lookups, activity floor, ranking, pilot pick.
-- **Spend (project meter, worst-case pricing that bills expansions):** X reads 2.70 / 150 USD, discovery
-  30.74 / 75 USD, model calls 0.00 / 75 USD. Separately, about **4.18 USD of real xAI spend outside the meter**:
-  test runs made real Grok calls while a real `XAI_API_KEY` was set (fixed in `tests/conftest.py`).
-- The run is resumable at no cost: stored 2xx responses are replayed, `cohort_as_of` is fixed at 2026-11-21T19:00Z.
-  A bug that made re-runs build differently ordered queries (and so pay again) was fixed on 2026-11-23 (D-023).
-- **Resumed 2026-11-23:** all 68 stored sweeps replayed free; the first new request still got HTTP 402
-  `credits-depleted`. `ANTHROPIC_API_KEY` is saved on the environment but still empty in this session's container.
+- **Stage 2 cohort built (provisional, 2026-11-24): 67 accounts** under the tightened bar (D-025): at least 2
+  pre-release posts naming a ledger model, at least 1,000 followers, not lab staff, at least 10 strict-rule release
+  posts in 90 days, ranked by median impressions. Of 4,288 candidates, 128 met the pre-release requirement; 41 then
+  failed the follower floor, 28+15 were lab accounts or staff, 20 failed the activity floor. Files: `cohort/`.
+- **Pilot accounts (15, 5 per third):** top: @ArtificialAnlys, @LuminaBench, @TekonBurns, @Ananth7e, @laopai1990;
+  middle: @0x0SojalSec, @Mr_nexp, @Haleeeemahh, @MLB_Connection, @Kevin_Logan; bottom: @LDT0545, @thisisdimm,
+  @aapakari, @arnaudmercier, @JayaNayak21. **Not yet collected.**
+- **Known weakness:** the pre-release count comes from sweeps that kept 100 posts per release over a window from
+  7 days before to 2 days after launch, so launch-day posts crowd out earlier ones. Well-known leak/early-news
+  accounts score 0-1 (@legit_api, @btibor91, @kimmonismus, @scaling01, @testingcatalog) and are excluded.
+- Done live: `probe` (`tweet.fields` confirmed); `signals-x` (310 official pre-release posts, `ledger/signals_x.csv`).
+- **Spend (project meter):** X reads 2.70 / 150 USD, discovery 82.41 / 100 USD (cap raised from 75 by Alex,
+  D-025), model calls 0.00 / 75 USD. Separately about 4.18 USD of xAI spend outside the meter from test runs (fixed).
+- Fixed along the way: X out of credit (topped up); non-deterministic query order (D-023); ranking slimmed to fit
+  (D-024); candidate pool inflated by re-runs (D-025). `ANTHROPIC_API_KEY` is still empty in this session.
 - **X API facts were checked against the official docs** (D-002, `docs/api_docs_findings.md`): posts $0.005 and
   users $0.010 per object; full-archive search available on pay-per-use; user timelines stop at 800 posts when
   replies are excluded, so collection uses full-archive search (D-003); `impression_count` is public.
 
 ## In progress
 
-- Nothing running. Blocked on X credit and the Anthropic key (below).
+- Nothing running. Cohort awaiting Alex on the pre-release weakness before collection (below).
 
 ## Waiting on Alex
 
-1. **X credit and the Anthropic key.** X still reports credits depleted (auto-recharge did not fire; check it in
-   the X developer console). `ANTHROPIC_API_KEY` is saved on the environment but not visible in this session's
-   container (saved variables load at session start). The X balance ran out at about 33 USD of metered reads. To
-   finish the pilot within the caps the account needs up to about 44 USD more for discovery plus up to 147 USD for
-   collection (worst case; actual likely lower). `ANTHROPIC_API_KEY` was empty in this session. Then
-   `python -m xrf pilot` resumes from the stored responses; the cohort summary and 15 pilot accounts will be added
-   here at STOP 1 and the run will continue with the pilot only.
+1. **Cohort pre-release check and the Anthropic key.** Decide whether to re-run the pre-release check with
+   searches limited to the 7 days before each announcement (see chat, 2026-11-24) before collecting the pilot.
+   `ANTHROPIC_API_KEY` is saved on the environment but empty in this session's container.
 2. **Terms of use (D-017), before the pilot runs.** X's pay-per-use agreement bars providing licensed content "to
    any third party except as expressly permitted"; sending post text to Anthropic for extraction may fall under it.
    Public datasets may contain post IDs only, not text. Naming accounts in analysis is not addressed.
