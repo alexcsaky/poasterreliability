@@ -23,7 +23,10 @@ _Last updated 2026-11-24._
   90 days. Pool 4,477; 176 met the pre-release requirement; 16 of the 19 seeds are in (out: @legit_api and
   @apples_jimmy on the activity floor, @chatgpt21 does not exist). 13 of the top 22 are seeds; @kimmonismus is #1,
   @iruletheworldmo #10. Files: `cohort/`.
-- **Pilot accounts (15, 5 per third, random, seed 20261119):** top: @ArtificialAnlys, @NFT_Chen, @ChrisGPT, @morganlinton, @marcthecreatorr; middle:
+- **Collection (Stage 3) started 2026-11-24, stopped by X credits running out:** @marcthecreatorr and @Ananth7e
+  complete, @NFT_Chen partial (2,282 posts), 17 accounts to go. About 0.009 USD per collected post including
+  quoted posts and authors. X reads 42.23 / 150 USD.
+- **Pilot accounts (superseded by D-027, see `cohort/pilot.csv`; 15 random + 5 named):** top: @ArtificialAnlys, @NFT_Chen, @ChrisGPT, @morganlinton, @marcthecreatorr; middle:
   @laopai1990, @Its_lakshya_ai, @mrfanduu, @hakmgpt, @gadi_neelesh; bottom: @AI_Screening, @R2Cdev_, @glitch_catAI, @MRehan_5, @melophile0646. **Not yet collected.**
 - The pre-release count still undercounts (relevance-ranked samples of 100 posts per release), which is why the
   known leakers needed seeding.

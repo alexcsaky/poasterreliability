@@ -8,6 +8,9 @@
   per-release sweeps; no cohort, no collection. Resumes at no extra cost once credits are added (D-022).
 - **Re-runs were not making identical requests.** Search terms of equal length were ordered by hash, so each
   run's query differed and missed the store. Fixed and the stored responses re-linked at no cost (D-023).
+- **X credit ran out again during pilot collection (2026-11-24)** after about 40 USD of collection: @marcthecreatorr
+  (204 posts) and @Ananth7e (1,557) are complete, @NFT_Chen is partly collected (2,282 posts so far). Resumes from
+  the stored pages once credit is added.
 - **X credit still depleted on 2026-11-23** despite auto-recharge being expected.
 - **No Anthropic key.** `ANTHROPIC_API_KEY` was empty, so extraction, resolution, the audit re-run and the report
   could not run even with X credit.
