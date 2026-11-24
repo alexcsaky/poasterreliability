@@ -7,7 +7,7 @@ ships) and attributes (name, price, specs, benchmark figures). Read this file be
 ## Fixed decisions (do not change; ask Alex if one blocks you)
 
 - Ground truth comes first and comes only from the labs' own sources (`ledger/`, `docs/LEDGER_SCHEMA.md`).
-- The cohort is the top 100 influencer-type accounts that post about model releases, ranked by reach.
+- The cohort is every influencer-type account that passes the cohort bar (D-025–D-027; 107 in the pilot run), ranked by reach.
   Official lab accounts and lab staff are not in the cohort; their posts are official signals.
 - Claim extraction never sees outcomes (no ledger, no search, no later posts).
 - Collection is exhaustive per account: every original and quote post in the window.

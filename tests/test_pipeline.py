@@ -162,9 +162,19 @@ def test_seeded_account_skips_pre_release_rule(conn):
     """D-026: seeds join the pool by hand and skip only the pre-release requirement."""
     seed_file = config.CONFIG / "seed_accounts.yaml"
     seed_file.write_text("seeds:\n  - {handle: frank, origin: test}\n  - {handle: ghostacct, origin: test}\n")
+    named_file = config.CONFIG / "pilot_named.yaml"
+    named_file.write_text("named: [frank, notincohort]\n")
     config.load.cache_clear()
     try:
-        cohort.build(conn, AS_OF, log=lambda *a: None)
+        out = cohort.build(conn, AS_OF, log=lambda *a: None)
+        # D-027: frank was already drawn at random (tiny cohort), so he stays in the random group; accounts
+        # outside the cohort are skipped
+        assert out["pilot_named"] == []
+        pil = {r["username"]: r["pilot_third"] for r in measures_csv(config.COHORT / "pilot.csv")}
+        assert pil["frank"] != "named" and "notincohort" not in pil
+        ranked = measures_csv(config.COHORT / "cohort.csv")
+        extra = cohort.add_named([dict(r) for r in ranked], [], log=lambda *a: None)
+        assert extra == ["frank"]
         rows = {r["username"]: r for r in measures_csv(config.COHORT / "cohort.csv")}
         assert rows["frank"]["seeded"] == "test" and rows["frank"]["pre_release_posts"] == "0"
         assert rows["alice"]["seeded"] == ""
@@ -172,4 +182,5 @@ def test_seeded_account_skips_pre_release_rule(conn):
         assert "no such account" in ex["ghostacct"]
     finally:
         seed_file.unlink()
+        named_file.unlink()
         config.load.cache_clear()

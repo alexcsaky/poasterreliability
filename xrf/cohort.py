@@ -344,7 +344,33 @@ def pilot_subset(ranked: list[dict], n_per_third: int = 5, seed: int = 20261119)
     return out
 
 
-def build(conn, as_of: datetime | None = None, top_n: int = 100, log=print) -> dict:
+def named_handles() -> list[str]:
+    """config/pilot_named.yaml (D-027): accounts added to the pilot by name, reported as a separate group."""
+    try:
+        return [h.lstrip("@") for h in (config.load("pilot_named") or {}).get("named") or []]
+    except FileNotFoundError:
+        return []
+
+
+def add_named(ranked: list[dict], pilot: list[dict], log=print) -> list[str]:
+    by_name = {(r["username"] or "").lower(): r for r in ranked}
+    have = {(p["username"] or "").lower() for p in pilot}
+    out = []
+    for h in named_handles():
+        r = by_name.get(h.lower())
+        if r is None:
+            log(f"  named pilot account @{h} is not in the cohort: skipped")
+            continue
+        if h.lower() in have:
+            continue
+        r["pilot"] = 1
+        r["pilot_third"] = "named"
+        pilot.append(r)
+        out.append(r["username"])
+    return out
+
+
+def build(conn, as_of: datetime | None = None, top_n: int | None = None, log=print) -> dict:
     as_of = as_of or datetime.now(timezone.utc)
     # The pool is rebuilt from stored responses on every run, so re-runs do not inflate sightings (D-025).
     conn.execute("DELETE FROM candidates")
@@ -366,14 +392,17 @@ def build(conn, as_of: datetime | None = None, top_n: int = 100, log=print) -> d
     found = {(u["username"] or "").lower() for u in conn.execute("SELECT username FROM users")}
     for h in sorted(set(seeds) - found):
         excluded.append({"username": h, "user_id": "", "followers": "", "reason": "seed: no such account on X"})
-    ranked = rank(conn, passed, as_of, log=log)[:top_n]
+    ranked = rank(conn, passed, as_of, log=log)   # D-027: every account that passes (was top 100)
+    if top_n:
+        ranked = ranked[:top_n]
     srcs = {r["user_id"]: r["sources"] for r in conn.execute("SELECT user_id, sources FROM candidates")}
     for r in ranked:
         s = Counter((srcs.get(r["user_id"]) or srcs.get("@" + (r["username"] or "").lower()) or "").split(";"))
         r["sources"] = "; ".join(f"{k}x{v}" for k, v in s.most_common(5))
     pilot = pilot_subset(ranked)
+    named = add_named(ranked, pilot, log=log)
     write_csv(config.COHORT / "cohort.csv", ranked, COHORT_COLUMNS)
     write_csv(config.COHORT / "excluded.csv", excluded, ["username", "user_id", "followers", "reason"])
     write_csv(config.COHORT / "pilot.csv", pilot, COHORT_COLUMNS)
     return {"pool": conn.execute("SELECT COUNT(*) FROM candidates").fetchone()[0], "passed": len(passed),
-            "cohort": len(ranked), "excluded": len(excluded), "pilot": [p["username"] for p in pilot]}
+            "cohort": len(ranked), "excluded": len(excluded), "pilot": [p["username"] for p in pilot], "pilot_named": named}

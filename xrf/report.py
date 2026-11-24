@@ -29,24 +29,35 @@ def _ci(acc, lo, hi, n):
     return "–" if not n else f"{100 * acc:.0f}% ({100 * lo:.0f}–{100 * hi:.0f}), n={n}"
 
 
+def _acct(a: str) -> str:
+    named = {h.lower() for h in state.get("pilot_named") or []}
+    return f"@{a} (named)" if a.lower() in named else f"@{a}"
+
+
 def estimate(conn, m: dict) -> dict:
     """Costed estimate for the full cohort, from observed pilot rates where available."""
     px = config.load("pricing")
     p = px["x"]
     am = px["anthropic"]["models"]
     mc = config.load("models")
-    pilot = state.get("pilot_accounts") or []
+    # Rates come from the random pilot only; the named group (D-027) was hand-picked and would skew them.
+    named = {h.lower() for h in state.get("pilot_named") or []}
+    pilot = [a for a in state.get("pilot_accounts") or [] if a.lower() not in named]
+    n_cohort = state.get("cohort_size") or 100
     days = 90
-    obs_posts = conn.execute("SELECT COUNT(*) FROM posts WHERE source='collection'").fetchone()[0]
-    quoted = conn.execute("SELECT COUNT(*) FROM posts WHERE source='collection' AND quoted_post_id IS NOT NULL").fetchone()[0]
+    who = f"lower(author_username) IN ({','.join('?' * len(pilot))})" if pilot else "0"
+    args = [a.lower() for a in pilot]
+    obs_posts = conn.execute(f"SELECT COUNT(*) FROM posts WHERE source='collection' AND {who}", args).fetchone()[0]
+    quoted = conn.execute(f"SELECT COUNT(*) FROM posts WHERE source='collection' AND quoted_post_id IS NOT NULL AND {who}",
+                          args).fetchone()[0]
     if obs_posts and pilot:
         ppd = obs_posts / len(pilot) / days
-        basis = f"observed: {obs_posts} posts from {len(pilot)} pilot accounts over {days} days"
+        basis = f"observed: {obs_posts} posts from {len(pilot)} randomly drawn pilot accounts over {days} days"
     else:
         ppd = 8.0
         basis = "ASSUMED 8 original+quote posts per account per day (no pilot data yet)"
     qshare = (quoted / obs_posts) if obs_posts else 0.3
-    rel = conn.execute("SELECT AVG(about_release) FROM pass1").fetchone()[0]
+    rel = conn.execute(f"SELECT AVG(about_release) FROM pass1 JOIN posts USING (post_id) WHERE {who}", args).fetchone()[0]
     rel_share = rel if rel is not None else 0.35
     spent_llm = conn.execute("SELECT COALESCE(SUM(usd),0), COUNT(*) FROM cost_events WHERE budget='model_calls' AND endpoint='messages'").fetchone()
 
@@ -57,8 +68,8 @@ def estimate(conn, m: dict) -> dict:
     p2 = llm_cost(mc["pass2"]["model"], 3000, 2000)
     out = {"basis": basis, "posts_per_account_day": ppd, "quoted_share": qshare, "release_share": rel_share,
            "pass1_usd_per_post": p1, "pass2_usd_per_release_post": p2}
-    for label, d in (("100 accounts x 90 days", 90), ("100 accounts x 12 months", 365)):
-        posts = 100 * ppd * d
+    for label, d in ((f"{n_cohort} accounts x 90 days", 90), (f"{n_cohort} accounts x 12 months", 365)):
+        posts = n_cohort * ppd * d
         x_low = posts * p["post_read_usd"]
         x_high = posts * (1 + qshare) * p["post_read_usd"] + (posts / 500) * 2 * p["user_read_usd"]
         llm = posts * p1 + posts * rel_share * p2
@@ -82,6 +93,13 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
              "before collection (plausibly the wrong ones) are missing, so **every accuracy figure in this report is an "
              "upper bound**.")
     L.append("")
+    named = state.get("pilot_named") or []
+    if named:
+        n_rand = len([x for x in state.get("pilot_accounts") or [] if x.lower() not in {h.lower() for h in named}])
+        L.append(f"Pilot: {n_rand} accounts drawn at random (5 per third of the cohort ranking) plus a **named group** "
+                 f"chosen by hand ({', '.join('@' + h for h in named)}), marked \"(named)\" in every table. Cost and "
+                 "volume estimates use the random accounts only.")
+        L.append("")
     n_posts = conn.execute("SELECT COUNT(*) FROM posts WHERE source IN ('collection','daily') AND kind IN ('original','quote')").fetchone()[0]
     if n_posts == 0:
         L.append("> **No pilot data yet.** No posts have been collected, so the yield, measures and audit sections are "
@@ -115,7 +133,7 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
     L.append("")
     yrows = []
     for r in sorted(rows, key=lambda r: r["account"]):
-        yrows.append([f"@{r['account']}", r["posts"], r["release_posts"], r["checkable_claims"], r["resolved_n"],
+        yrows.append([_acct(r['account']), r["posts"], r["release_posts"], r["checkable_claims"], r["resolved_n"],
                       r["timing_open"] + r["attr_open"]])
     tot = [sum(int(x[i]) for x in yrows) for i in range(1, 6)] if yrows else [0] * 5
     yrows.append(["**total**", *tot])
@@ -143,7 +161,7 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
     L.append("")
     hdr = ["rank", "account", "pre-signal timing acc", "skill vs base (pre)", "all timing acc", "skill vs base",
            "attribute acc", "shrunk acc", "median lead (h)", "original share", "vagueness"]
-    L.append(_table(hdr, [[r.get("rank") or "–", f"@{r['account']}",
+    L.append(_table(hdr, [[r.get("rank") or "–", _acct(r['account']),
                            _ci(r["pre_acc"], r["pre_lo"], r["pre_hi"], r["pre_n"]),
                            _f(r["pre_skill"]),
                            _ci(r["timing_acc"], r["timing_lo"], r["timing_hi"], r["timing_n"]),
@@ -157,7 +175,7 @@ def build(conn, m: dict, as_of: datetime, audit_scores: dict | None = None) -> s
     L.append("Flat vs hedged timing claims, and the 'soon' sensitivity (7/14/30 days; 14 is used above):")
     L.append("")
     L.append(_table(["account", "flat", "hedged", "soon@7", "soon@14", "soon@30"],
-                    [[f"@{r['account']}", _ci(r["timing_flat_acc"], r["timing_flat_lo"], r["timing_flat_hi"], r["timing_flat_n"]),
+                    [[_acct(r['account']), _ci(r["timing_flat_acc"], r["timing_flat_lo"], r["timing_flat_hi"], r["timing_flat_n"]),
                       _ci(r["timing_hedged_acc"], r["timing_hedged_lo"], r["timing_hedged_hi"], r["timing_hedged_n"]),
                       f"{_f(r['soon7_acc'], pct=True)} (n={r['soon7_n']})", f"{_f(r['soon14_acc'], pct=True)} (n={r['soon14_n']})",
                       f"{_f(r['soon30_acc'], pct=True)} (n={r['soon30_n']})"] for r in rows]))

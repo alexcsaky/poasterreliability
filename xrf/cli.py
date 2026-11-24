@@ -59,6 +59,8 @@ def cmd_cohort(a):
     as_of = state.get_or_set_time("cohort_as_of")
     out = cohort.build(_conn(), as_of)
     state.set("pilot_accounts", out["pilot"])
+    state.set("pilot_named", out.get("pilot_named") or [])
+    state.set("cohort_size", out["cohort"])
     print(json.dumps(out, indent=2))
 
 

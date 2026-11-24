@@ -356,3 +356,15 @@ a window from 7 days before to 2 days after launch, so launch-day volume crowded
   the pilot's resolved accuracy, not the seed list, decides how they score.
 - Claude's additions came from memory (handles may be stale) and from looked-up candidates whose bios describe
   leaks, rumours or insider reporting. General AI-news and commentary accounts were not seeded.
+
+## D-027 (2026-11-24) Cohort takes everyone who passes; named pilot group
+
+- Alex: the cohort is every account that passes the D-025/D-026 bar (107), not the top 100. The bar now does the
+  filtering; the 100 cap only removed the 7 lowest-reach accounts. (This changes the AGENTS.md fixed decision
+  "top 100"; decided by Alex in chat.)
+- Pilot: the random draw (5 per third of the ranking, seed 20261119) stays, so cost and volume estimates rest on
+  an unbiased sample. Alex added a **named group** (`config/pilot_named.yaml`): @iruletheworldmo, @kimmonismus,
+  @testingcatalog, @btibor91, @scaling01. They are collected and scored like the others, marked "(named)" in
+  every report table, and left out of the report's full-cohort cost and volume estimates. A named account that
+  the random draw already picked stays in the random group.
+- With 107 accounts the thirds shifted, so the random draw differs from the one shown on 2026-11-24 (100 accounts).

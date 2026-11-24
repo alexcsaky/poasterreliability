@@ -1,5 +1,6 @@
 {
   "cohort_as_of": "2026-11-21T19:00:00Z",
+  "cohort_size": 107,
   "grok_used": true,
   "ledger_reresearch": {
     "field_conflict": 0.025974025974025976,
@@ -12,19 +13,31 @@
   },
   "pilot_accounts": [
     "marcthecreatorr",
+    "Ananth7e",
     "NFT_Chen",
     "ArtificialAnlys",
     "ChrisGPT",
-    "morganlinton",
-    "gadi_neelesh",
-    "laopai1990",
-    "mrfanduu",
-    "Its_lakshya_ai",
-    "hakmgpt",
-    "AI_Screening",
-    "MRehan_5",
-    "melophile0646",
-    "glitch_catAI",
-    "R2Cdev_"
+    "cheatyyyy",
+    "insanekrishnaa",
+    "EngMoElgaraihy",
+    "ravikiran_dev7",
+    "SadAlbert10",
+    "0xLogicrw",
+    "adityaa_behera",
+    "xjaxax",
+    "JayaNayak21",
+    "web3devop",
+    "iruletheworldmo",
+    "kimmonismus",
+    "testingcatalog",
+    "btibor91",
+    "scaling01"
+  ],
+  "pilot_named": [
+    "iruletheworldmo",
+    "kimmonismus",
+    "testingcatalog",
+    "btibor91",
+    "scaling01"
   ]
 }
